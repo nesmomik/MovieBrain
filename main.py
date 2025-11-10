@@ -21,18 +21,25 @@ def list_movies():
 
 def add_movie():
     name = input("\n  Please enter the name of the movie you want to add:\n\n  ")
-
-    rating = float(
-        input("\n  Please enter the rating of the movie you want to add:\n\n  ") or "0"
-    )
-
-    # update dict with new key:value pair
-    movies.update({name: rating})
-
-    print_message(f"Added {name} with the rating {rating} to the database.")
-
-
-#    print(f"\n  Added {name} with the rating {rating} to the database.")Added {name} with the rating {rating} to the database."
+    # check if movie name given
+    if len(name) == 0:
+        print_message("Error! Movie name cannot be empty.")
+    # check if movie name already exists in the database
+    elif movies.get(name) is None:
+        rating = float(
+            input("\n  Please enter the rating of the movie you want to add:\n\n  ") or "0"
+        )
+        # check if rating was given
+        if rating == 0:
+            print_message("Error! Movie rating cannot be empty.")
+        else:
+            # update dict with new key:value pair
+            movies.update({name: rating})
+            print_message(f"Added {name} with the rating {rating} to the database.")
+        # no rating given
+    # key name already in dict
+    else:
+        print_message(f"Error! Movie {name} is already in the database.")
 
 
 def delete_movie():
