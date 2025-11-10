@@ -13,7 +13,7 @@ from ui_helper_functions import (
 
 
 def list_movies():
-    '''list all movies'''
+    """list all movies"""
     print(f"\n  There are {len(movies)} movies in the database.\n")
 
     # print all movies by iterating through dict items
@@ -22,7 +22,7 @@ def list_movies():
 
 
 def add_movie():
-    '''adds a movie'''
+    """adds a movie"""
     name = input("\n  Please enter the name of the movie you want to add:\n\n  ")
     # check if movie name given
     if len(name) == 0:
@@ -47,7 +47,7 @@ def add_movie():
 
 
 def delete_movie():
-    '''delete a movie'''
+    """delete a movie"""
     list_movies()
 
     name = input("\n  Please enter the name of the movie you want to delete:\n\n  ")
@@ -61,7 +61,7 @@ def delete_movie():
 
 
 def update_movie():
-    '''change the rating of a movie'''
+    """change the rating of a movie"""
     list_movies()
 
     name = input("\n  Please enter the name of the movie you want to update:\n\n  ")
@@ -77,10 +77,10 @@ def update_movie():
 
 
 def show_stats():
-    '''
+    """
     shows the average and median rating values of all movies and also
     information about the worst and best movies
-    '''
+    """
     print("\n  Here are some fresh stats from the database:")
 
     # calculate and print average
@@ -125,7 +125,7 @@ def show_stats():
 
 
 def random_movie():
-    '''show a random movie'''
+    """show a random movie"""
     print("\n  Here is a random movie from the database:")
 
     i = 0
@@ -141,7 +141,7 @@ def random_movie():
 
 
 def search_movie():
-    '''case insensitive search by partial name'''
+    """case insensitive search by partial name"""
     search_term = input("\n  Enter the search term:\n\n  ")
 
     # adds value movie to the list when while iterating through the dict keys the condition is met
@@ -153,32 +153,27 @@ def search_movie():
         print(f"\n  {result}: {movies.get(result)}")
 
 
+def get_rating(list_item):
+    '''used to provide the key for the sort in sorted_movies'''
+    return list_item[1]
+
 def sorted_movies():
-    '''show a sorted list of all movies'''
+    """show a sorted list of all movies"""
     print("\n  Here is the movie list sorted by rating:\n")
 
-    sorted_rating_list = list(movies.values())
-    # sort rating in descending order
-    sorted_rating_list.sort(reverse=True)
-    sorted_movie_list = []
-    i = 0
-    # repeat as often as the count of movies in the list
-    # i also used to index sorted_rating_list
-    while i < len(movies):
-        # go through sorted_rating_list in order and add tupel
-        # to sorted_movie_list in the right order
-        for movie, rating in movies.items():
-            if rating == sorted_rating_list[i]:
-                sorted_movie_list.append((movie, rating))
-                break
-        i += 1
+    movie_tuple_list = []
+    # create list of tupels
+    for movie, rating in movies.items():
+        movie_tuple_list.append((movie, rating))
+    # sort tuple list by rating in descending order
+    movie_tuple_list.sort(reverse=True, key=get_rating)
 
-    for movie, rating in sorted_movie_list:
+    for movie, rating in movie_tuple_list:
         print(f"  {movie}: {rating}")
 
 
 def main():
-    '''displays an intro screen and enters the main program loop'''
+    """displays an intro screen and enters the main program loop"""
     print_intro()
 
     wait_for_enter()
