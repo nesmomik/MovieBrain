@@ -130,7 +130,16 @@ def search_movie():
     search_term = input("\n  Enter the search term:\n\n  ")
 
     # adds value movie to the list when while iterating through the dict keys the condition is met
-    search_results = [movie for movie in movies.keys() if search_term in movie]
+    search_results = [movie for movie in movies.keys() if search_term in movie.lower()]
+    
+#    search_results = []
+#    for movie in movies.keys():
+#        print(movie.lower())
+#        if search_term in movie.lower():
+#            print(movie)
+#            search_results.append(movie)
+
+
 
     print("\n  Here are the search results:")
 
