@@ -13,6 +13,7 @@ from ui_helper_functions import (
 
 
 def list_movies():
+    '''list all movies'''
     print(f"\n  There are {len(movies)} movies in the database.\n")
 
     # print all movies by iterating through dict items
@@ -21,6 +22,7 @@ def list_movies():
 
 
 def add_movie():
+    '''adds a movie'''
     name = input("\n  Please enter the name of the movie you want to add:\n\n  ")
     # check if movie name given
     if len(name) == 0:
@@ -28,7 +30,8 @@ def add_movie():
     # check if movie name already exists in the database
     elif movies.get(name) is None:
         rating = float(
-            input("\n  Please enter the rating of the movie you want to add:\n\n  ") or "0"
+            input("\n  Please enter the rating of the movie you want to add:\n\n  ")
+            or "0"
         )
         # check if rating was given
         if rating == 0:
@@ -44,6 +47,7 @@ def add_movie():
 
 
 def delete_movie():
+    '''delete a movie'''
     list_movies()
 
     name = input("\n  Please enter the name of the movie you want to delete:\n\n  ")
@@ -57,6 +61,7 @@ def delete_movie():
 
 
 def update_movie():
+    '''change the rating of a movie'''
     list_movies()
 
     name = input("\n  Please enter the name of the movie you want to update:\n\n  ")
@@ -72,6 +77,10 @@ def update_movie():
 
 
 def show_stats():
+    '''
+    shows the average and median rating values of all movies and also
+    information about the worst and best movies
+    '''
     print("\n  Here are some fresh stats from the database:")
 
     # calculate and print average
@@ -92,7 +101,9 @@ def show_stats():
             best_movies.append(movie)
 
     if len(best_movies) == 1:
-        print(f"\n  The best rated movie is: {best_movies[0]}: {movies.get(best_movies[0])}")
+        print(
+            f"\n  The best rated movie is: {best_movies[0]}: {movies.get(best_movies[0])}"
+        )
     else:
         print("\n  The best rated movies are:")
         for i in range(len(best_movies)):
@@ -104,7 +115,9 @@ def show_stats():
     worst_movies = [movie for movie, rating in movies.items() if rating == min_rating]
 
     if len(worst_movies) == 1:
-        print(f"\n  The worst rated movie is: {worst_movies[0]}: {movies.get(worst_movies[0])}")
+        print(
+            f"\n  The worst rated movie is: {worst_movies[0]}: {movies.get(worst_movies[0])}"
+        )
     else:
         print("\n  The worst rated movies are:")
         for i in range(len(worst_movies)):
@@ -112,6 +125,7 @@ def show_stats():
 
 
 def random_movie():
+    '''show a random movie'''
     print("\n  Here is a random movie from the database:")
 
     i = 0
@@ -127,19 +141,11 @@ def random_movie():
 
 
 def search_movie():
+    '''case insensitive search by partial name'''
     search_term = input("\n  Enter the search term:\n\n  ")
 
     # adds value movie to the list when while iterating through the dict keys the condition is met
     search_results = [movie for movie in movies.keys() if search_term in movie.lower()]
-    
-#    search_results = []
-#    for movie in movies.keys():
-#        print(movie.lower())
-#        if search_term in movie.lower():
-#            print(movie)
-#            search_results.append(movie)
-
-
 
     print("\n  Here are the search results:")
 
@@ -148,6 +154,7 @@ def search_movie():
 
 
 def sorted_movies():
+    '''show a sorted list of all movies'''
     print("\n  Here is the movie list sorted by rating:\n")
 
     sorted_rating_list = list(movies.values())
@@ -171,6 +178,7 @@ def sorted_movies():
 
 
 def main():
+    '''displays an intro screen and enters the main program loop'''
     print_intro()
 
     wait_for_enter()
@@ -179,6 +187,7 @@ def main():
 
     isTrue = True
 
+    # the main loop
     while isTrue:
         # show menu screen
         print_menu()

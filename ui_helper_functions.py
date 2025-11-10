@@ -3,6 +3,7 @@ import os
 
 
 def print_message(message):
+    '''prints message in the middle of the ui'''
     clear_screen()
 
     print_title()
@@ -11,14 +12,17 @@ def print_message(message):
 
 
 def wait_for_enter():
+    '''pause until press of enter key'''
     input("\n\n  Press the Enter key to continue!\n  ")
 
 
 def clear_screen():
+    '''empties the terminal in unix and windows'''
     call("clear" if os.name == "posix" else "cls")
 
 
 def print_title():
+    '''print the ascii art title'''
     print(r"""
   ___  ___           _     ______           _       
   |  \/  |          (_)    | ___ \         (_)      
@@ -30,6 +34,7 @@ def print_title():
 
 
 def print_brain():
+    '''print the cute little brain'''
     print(r"""
                        _.--'"'.
                       (  ( (   )
@@ -40,6 +45,7 @@ def print_brain():
 
 
 def print_intro():
+    '''print intro screen'''
     clear_screen()
 
     print_title()
@@ -50,6 +56,7 @@ def print_intro():
 
 
 def print_menu():
+    '''pring the main menu'''
     print_title()
 
     print(r"""
