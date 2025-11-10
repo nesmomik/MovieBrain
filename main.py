@@ -1,4 +1,5 @@
 from random import randint
+from statistics import median
 
 from movie_db import movies
 from ui_helper_functions import (
@@ -80,15 +81,7 @@ def show_stats():
     print(f"\n\n  The average rating of the movies is: {round(avg_rating, 1)}")
 
     # calculate and print median value
-    if list_length % 2 != 0:
-        # if list length uneven take the middle element
-        median_rating = rating_list[(list_length - 1) // 2]
-    else:
-        # else calculate average of both middle elements
-        median_rating = (
-            rating_list[(list_length // 2) - 1] + rating_list[list_length // 2]
-        ) / 2
-    print(f"\n  The median rating of the movies is: {round(median_rating, 1)}")
+    print(f"\n  The median rating of the movies is: {round(median(rating_list), 1)}")
 
     # get maximum rating and print movie(s) with max rating
     max_rating = max(rating_list)
@@ -99,11 +92,11 @@ def show_stats():
             best_movies.append(movie)
 
     if len(best_movies) == 1:
-        print(f"\n  The best rated movie is: {best_movies[0]}")
+        print(f"\n  The best rated movie is: {best_movies[0]}: {movies.get(best_movies[0])}")
     else:
         print("\n  The best rated movies are:")
         for i in range(len(best_movies)):
-            print(f"\n  {best_movies[i]}")
+            print(f"\n  {best_movies[i]}: {movies.get(best_movies[0])}")
 
     # get minimum rating and print movie(s) with min rating
     min_rating = min(rating_list)
@@ -111,11 +104,11 @@ def show_stats():
     worst_movies = [movie for movie, rating in movies.items() if rating == min_rating]
 
     if len(worst_movies) == 1:
-        print(f"\n  The worst rated movie is: {worst_movies[0]}")
+        print(f"\n  The worst rated movie is: {worst_movies[0]}: {movies.get(worst_movies[0])}")
     else:
         print("\n  The worst rated movies are:")
         for i in range(len(worst_movies)):
-            print(f"\n  {worst_movies[i]}")
+            print(f"\n  {worst_movies[i]}: {movies.get(worst_movies[0])}")
 
 
 def random_movie():
