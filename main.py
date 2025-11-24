@@ -99,58 +99,65 @@ def show_stats():
     shows the average and median rating values of all movies and also
     information about the worst and best movies
     """
-    print("\n  Here are some fresh stats from the database:")
+    if movies:
+        print("\n  Here are some fresh stats from the database:")
 
-    # calculate and print average
-    rating_list = list(movies.values())
-    list_length = len(movies)
-    avg_rating = sum(rating_list) / list_length
-    print(f"\n\n  The average rating of the movies is: {round(avg_rating, 1)}")
+        # calculate and print average
+        rating_list = list(movies.values())
+        list_length = len(movies)
+        avg_rating = sum(rating_list) / list_length
+        print("\n\n  The average rating of the movies is: "
+              + f"{round(avg_rating, 1)}")
 
-    # calculate and print median value
-    print(
-        "\n  The median rating of the movies is: "
-        + f"{round(median(rating_list), 1)}"
-    )
+        # calculate and print median value
+        print(
+            "\n  The median rating of the movies is: "
+            + f"{round(median(rating_list), 1)}"
+        )
 
-    # get maximum rating and print movie(s) with max rating
-    max_rating = max(rating_list)
-    best_movies = []
-    # build list by iterating through dict items
-    for movie, rating in movies.items():
-        if rating == max_rating:
-            best_movies.append(movie)
+        # get maximum rating and print movie(s) with max rating
+        max_rating = max(rating_list)
+        best_movies = []
+        # build list by iterating through dict items
+        for movie, rating in movies.items():
+            if rating == max_rating:
+                best_movies.append(movie)
 
-    print("\n  The best rated movie(s):")
-    for movie in best_movies:
-        print(f"\n  {movie}: {movies.get(movie)}")
+        print("\n  The best rated movie(s):")
+        for movie in best_movies:
+            print(f"\n  {movie}: {movies.get(movie)}")
 
-    # get minimum rating and print movie(s) with min rating
-    min_rating = min(rating_list)
-    # build list with list comprehension
-    worst_movies = [
-        movie for movie, rating in movies.items() if rating == min_rating
-    ]
-    print("\n  The worst rated movie(s):")
-    for movie in worst_movies:
-        print(f"\n  {movie}: {movies.get(movie)}")
+        # get minimum rating and print movie(s) with min rating
+        min_rating = min(rating_list)
+        # build list with list comprehension
+        worst_movies = [
+            movie for movie, rating in movies.items() if rating == min_rating
+        ]
+        print("\n  The worst rated movie(s):")
+        for movie in worst_movies:
+            print(f"\n  {movie}: {movies.get(movie)}")
+    else:
+        print("\n  The database is empty!")
 
 
 def random_movie():
     """show a random movie"""
-    print("\n  Here is a random movie from the database:")
+    # check for movies in database
+    if movies: 
+        print("\n  Here is a random movie from the database:")
 
-    i = 0
-    # generate random index
-    movie_index = randint(0, len(movies))
-    # get movie info for index
-    for movie, rating in movies.items():
-        if i == movie_index:
-            break
-        i += 1
-    # print movie info
-    print(f"\n\n\n  {movie}: {rating}\n\n")
-
+        i = 0
+        # generate random index
+        movie_index = randint(0, len(movies))
+        # get movie info for index
+        for movie, rating in movies.items():
+            if i == movie_index:
+                break
+            i += 1
+        # print movie info
+        print(f"\n\n\n  {movie}: {rating}\n\n")
+    else:
+        print("\n  The database is empty!")
 
 def search_movie():
     """case insensitive search by partial name"""
