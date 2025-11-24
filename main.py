@@ -14,11 +14,14 @@ from ui_helper_functions import (
 
 def list_movies():
     """list all movies"""
-    print(f"\n  There are {len(movies)} movies in the database.\n")
+    if movies:
+        print(f"\n  There are {len(movies)} movies in the database.\n")
 
-    # print all movies by iterating through dict items
-    for movie, rating in movies.items():
-        print(f"  {movie}: {rating}")
+        # print all movies by iterating through dict items
+        for movie, rating in movies.items():
+            print(f"  {movie}: {rating}")
+    else:
+        print("\n  The database is empty!")
 
 
 def add_movie():
@@ -86,8 +89,9 @@ def update_movie():
             input("\n  Please enter the new rating of the movie:\n\n  ") or "0"
         )
         movies.update({name: rating})
-        print_message(f"Updated the movie {name} "
-                      + "with the new rating {rating}.")
+        print_message(
+            f"Updated the movie {name} " + "with the new rating {rating}."
+        )
     else:
         print_message(
             f"Sorry, the movie with the name {name} is not in the database."
@@ -106,8 +110,10 @@ def show_stats():
         rating_list = list(movies.values())
         list_length = len(movies)
         avg_rating = sum(rating_list) / list_length
-        print("\n\n  The average rating of the movies is: "
-              + f"{round(avg_rating, 1)}")
+        print(
+            "\n\n  The average rating of the movies is: "
+            + f"{round(avg_rating, 1)}"
+        )
 
         # calculate and print median value
         print(
@@ -159,6 +165,7 @@ def random_movie():
     else:
         print("\n  The database is empty!")
 
+
 def search_movie():
     """case insensitive search by partial name"""
     search_term = input("\n  Enter the search term:\n\n  ")
@@ -166,8 +173,7 @@ def search_movie():
     # adds value movie to the list when while iterating
     # through the dict keys the condition is met
     search_results = [
-        movie for movie in movies.keys() \
-        if search_term.lower() in movie.lower()
+        movie for movie in movies.keys() if search_term.lower() in movie.lower()
     ]
 
     print("\n  Here are the search results:")
@@ -206,8 +212,9 @@ menu = {
     "7": search_movie,
     "8": sorted_movies,
     "9": print_intro,
-    "0": clear_screen
+    "0": clear_screen,
 }
+
 
 def main():
     """displays an intro screen and enters the main program loop"""
@@ -240,31 +247,31 @@ def main():
         else:
             print_message("Sorry, wrong Choice!")
 
-#        # TODO: Refactor to dispatch table
-#        if choice == "1":
-#            list_movies()
-#        elif choice == "2":
-#            add_movie()
-#        elif choice == "3":
-#            delete_movie()
-#        elif choice == "4":
-#            update_movie()
-#        elif choice == "5":
-#            show_stats()
-#        elif choice == "6":
-#            random_movie()
-#        elif choice == "7":
-#            search_movie()
-#        elif choice == "8":
-#            sorted_movies()
-#        elif choice == "9":
-#            print_intro()
-#        elif choice == "0":
-#            isTrue = False
-#            clear_screen()
-#            break
-#        else:
-#            print_message("Sorry, wrong Choice!")
+        #        # TODO: Refactor to dispatch table
+        #        if choice == "1":
+        #            list_movies()
+        #        elif choice == "2":
+        #            add_movie()
+        #        elif choice == "3":
+        #            delete_movie()
+        #        elif choice == "4":
+        #            update_movie()
+        #        elif choice == "5":
+        #            show_stats()
+        #        elif choice == "6":
+        #            random_movie()
+        #        elif choice == "7":
+        #            search_movie()
+        #        elif choice == "8":
+        #            sorted_movies()
+        #        elif choice == "9":
+        #            print_intro()
+        #        elif choice == "0":
+        #            isTrue = False
+        #            clear_screen()
+        #            break
+        #        else:
+        #            print_message("Sorry, wrong Choice!")
 
         wait_for_enter()
 
