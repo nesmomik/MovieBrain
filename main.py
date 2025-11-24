@@ -121,15 +121,9 @@ def show_stats():
         if rating == max_rating:
             best_movies.append(movie)
 
-    if len(best_movies) == 1:
-        print(
-            "\n  The best rated movie is: "
-            + f"{best_movies[0]}: {movies.get(best_movies[0])}"
-        )
-    else:
-        print("\n  The best rated movies are:")
-        for i in range(len(best_movies)):
-            print(f"\n  {best_movies[i]}: {movies.get(best_movies[0])}")
+    print("\n  The best rated movie(s):")
+    for movie in best_movies:
+        print(f"\n  {movie}: {movies.get(movie)}")
 
     # get minimum rating and print movie(s) with min rating
     min_rating = min(rating_list)
@@ -137,16 +131,9 @@ def show_stats():
     worst_movies = [
         movie for movie, rating in movies.items() if rating == min_rating
     ]
-
-    if len(worst_movies) == 1:
-        print(
-            "\n  The worst rated movie is: "
-            + f"{worst_movies[0]}: {movies.get(worst_movies[0])}"
-        )
-    else:
-        print("\n  The worst rated movies are:")
-        for i in range(len(worst_movies)):
-            print(f"\n  {worst_movies[i]}: {movies.get(worst_movies[0])}")
+    print("\n  The worst rated movie(s):")
+    for movie in worst_movies:
+        print(f"\n  {movie}: {movies.get(movie)}")
 
 
 def random_movie():
