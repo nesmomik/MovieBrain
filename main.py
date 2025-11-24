@@ -143,7 +143,7 @@ def show_stats():
 def random_movie():
     """show a random movie"""
     # check for movies in database
-    if movies: 
+    if movies:
         print("\n  Here is a random movie from the database:")
 
         i = 0
@@ -196,6 +196,19 @@ def sorted_movies():
         print(f"  {movie}: {rating}")
 
 
+menu = {
+    "1": list_movies,
+    "2": add_movie,
+    "3": delete_movie,
+    "4": update_movie,
+    "5": show_stats,
+    "6": random_movie,
+    "7": search_movie,
+    "8": sorted_movies,
+    "9": print_intro,
+    "0": clear_screen
+}
+
 def main():
     """displays an intro screen and enters the main program loop"""
     print_intro()
@@ -217,31 +230,41 @@ def main():
 
         # screen selection
         print_title()
-        # TODO: Refactor to dispatch table
-        if choice == "1":
-            list_movies()
-        elif choice == "2":
-            add_movie()
-        elif choice == "3":
-            delete_movie()
-        elif choice == "4":
-            update_movie()
-        elif choice == "5":
-            show_stats()
-        elif choice == "6":
-            random_movie()
-        elif choice == "7":
-            search_movie()
-        elif choice == "8":
-            sorted_movies()
-        elif choice == "9":
-            print_intro()
+
+        if choice in map(str, range(1, 10)):
+            menu[choice]()
         elif choice == "0":
             isTrue = False
             clear_screen()
             break
         else:
             print_message("Sorry, wrong Choice!")
+
+#        # TODO: Refactor to dispatch table
+#        if choice == "1":
+#            list_movies()
+#        elif choice == "2":
+#            add_movie()
+#        elif choice == "3":
+#            delete_movie()
+#        elif choice == "4":
+#            update_movie()
+#        elif choice == "5":
+#            show_stats()
+#        elif choice == "6":
+#            random_movie()
+#        elif choice == "7":
+#            search_movie()
+#        elif choice == "8":
+#            sorted_movies()
+#        elif choice == "9":
+#            print_intro()
+#        elif choice == "0":
+#            isTrue = False
+#            clear_screen()
+#            break
+#        else:
+#            print_message("Sorry, wrong Choice!")
 
         wait_for_enter()
 
