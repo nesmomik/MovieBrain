@@ -188,7 +188,7 @@ def search_movie():
     # adds value movie to the list while iterating
     # through the dict keys the condition is met
     search_results = [
-        movie for movie in movies.keys() if search_term.lower() in movie.lower()
+        movie for movie in movies if search_term.lower() in movie.lower()
     ]
 
     if search_results:
@@ -234,10 +234,10 @@ def main():
 
     clear_screen()
 
-    isTrue = True
+    is_true = True
 
     # the main loop
-    while isTrue:
+    while is_true:
         # show menu screen
         print_menu()
 
@@ -251,7 +251,7 @@ def main():
         if choice in map(str, range(1, 10)):
             menu[choice]()
         elif choice == "0":
-            isTrue = False
+            is_true = False
             clear_screen()
             break
         else:
