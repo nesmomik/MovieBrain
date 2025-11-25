@@ -4,6 +4,7 @@ from statistics import median, mean
 import movie_storage
 from ui_helper_functions import (
     print_intro,
+    print_exit,
     print_menu,
     print_title,
     clear_screen,
@@ -275,8 +276,7 @@ menu = {
     "6": random_movie,
     "7": search_movie,
     "8": sorted_movies,
-    "9": print_intro,
-    "0": clear_screen,
+    "9": print_intro
 }
 
 
@@ -288,10 +288,8 @@ def main():
 
     clear_screen()
 
-    is_true = True
-
     # the main loop
-    while is_true:
+    while True:
         # show menu screen
         print_menu()
 
@@ -305,8 +303,8 @@ def main():
         if choice in map(str, range(1, 10)):
             menu[choice]()
         elif choice == "0":
-            is_true = False
             clear_screen()
+            print_exit()
             break
         else:
             print_message("Sorry, wrong Choice!")

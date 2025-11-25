@@ -33,6 +33,20 @@ def print_title():
       """)
 
 
+def print_goodbye():
+    """print the ascii art goodbye"""
+    print(r"""
+     _____                 _______            _
+    |  __ \               | | ___ \          | |
+    | |  \/ ___   ___   __| | |_/ /_   _  ___| |
+    | | __ / _ \ / _ \ / _` | ___ \ | | |/ _ \ |
+    | |_\ \ (_) | (_) | (_| | |_/ / |_| |  __/_|
+     \____/\___/ \___/ \__,_\____/ \__, |\___(_)
+                                    __/ |
+                                   |___/
+      """)
+
+
 def print_brain():
     """print the cute little brain"""
     print(r"""
@@ -53,6 +67,17 @@ def print_intro():
     print_brain()
 
     print("               Welcome to the MovieBrain!")
+
+
+def print_exit():
+    """print exit screen"""
+    clear_screen()
+
+    print_goodbye()
+
+    print_brain()
+
+    print("           See you again in the MovieBrain!\n\n")
 
 
 def print_menu():

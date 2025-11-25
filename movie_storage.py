@@ -2,8 +2,10 @@ import json
 
 JSON_DATA_FILE = "data.json"
 
+
 def test_func():
     print("test_func!")
+
 
 def get_movies():
     """
@@ -12,6 +14,7 @@ def get_movies():
     """
     with open(JSON_DATA_FILE, "r") as handle:
         return json.load(handle)
+
 
 def save_movies(movies):
     """
@@ -53,4 +56,3 @@ def update_movie(title, rating):
     movies = get_movies()
     movies[title].update(rating=rating)
     save_movies(movies)
-
