@@ -1,7 +1,7 @@
 from random import randint
 from statistics import median, mean
 
-from movie_db import movies
+import movie_storage
 from ui_helper_functions import (
     print_intro,
     print_menu,
@@ -14,6 +14,9 @@ from ui_helper_functions import (
 
 def list_movies():
     """list all movies"""
+    # load movies from json file
+    movies = movie_storage.get_movies()
+
     if movies:
         print(f"\n  There are {len(movies)} movies in the database.\n")
 
@@ -29,6 +32,9 @@ def add_movie():
     name = input(
         "\n  Please enter the name of the movie you want to add:\n\n  "
     )
+
+    movies = movie_storage.get_movies()
+
     # check if movie name given
     if len(name) == 0:
         print_message("Error! Movie name cannot be empty.")
@@ -52,8 +58,7 @@ def add_movie():
         if year == 0 or rating == 0:
             print_message("Error! Movie info not complete.")
         else:
-            # update dict with new key:value pair
-            movies[name] = {"year": year, "rating": rating}
+            movie_storage.add_movie(name, year, rating)
             print_message(
                 f"Added {name} ({year}) "
                 + f"with the rating {rating} to the database."
@@ -72,9 +77,11 @@ def delete_movie():
         "\n  Please enter the name of the movie you want to delete:\n\n  "
     )
 
+    movies = movie_storage.get_movies()
+
     if movies.get(name) is not None:
-        # remove dict item by passing key to pop() method, returns value
-        info = movies.pop(name)
+        info = movies[name]
+        movie_storage.delete_movie(name)
         print_message(
             f"Removed {name} ({info['year']}) "
             + f"with the rating {info['rating']} from the database."
@@ -93,12 +100,14 @@ def update_movie():
         "\n  Please enter the name of the movie you want to update:\n\n  "
     )
 
+    movies = movie_storage.get_movies()
+
     if movies.get(name) is not None:
         rating = float(
             input("\n  Please enter the new rating of the movie:\n\n  ") or "0"
         )
-        movies[name].update(rating=rating)
         info = movies[name]
+        movie_storage.update_movie(name, rating)
         print_message(
             f"Updated the movie {name} from {info['year']} "
             + f"with the new rating {info['rating']}."
@@ -114,6 +123,8 @@ def show_stats():
     shows the average and median rating values of all movies and also
     information about the worst and best movies
     """
+    movies = movie_storage.get_movies()
+
     if movies:
         print("\n  Here are some fresh stats from the database:")
 
@@ -167,6 +178,8 @@ def show_stats():
 
 def random_movie():
     """show a random movie"""
+    movies = movie_storage.get_movies()
+
     # check for movies in database
     if movies:
         print("\n  Here is a random movie from the database:")
@@ -185,6 +198,7 @@ def search_movie():
     """case insensitive search by partial name"""
     search_term = input("\n  Enter the search term:\n\n  ")
 
+    movies = movie_storage.get_movies()
     # adds value movie to the list while iterating
     # through the dict keys the condition is met
     search_results = [
@@ -202,6 +216,8 @@ def search_movie():
 def sorted_movies():
     """show a list of all movies sorted by rating"""
     print("\n  Here is the movie list sorted by rating:\n")
+
+    movies = movie_storage.get_movies()
 
     sorted_list = sorted(
         movies, key=lambda movie: movies[movie]["rating"], reverse=True
