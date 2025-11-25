@@ -29,42 +29,58 @@ def list_movies():
 
 def add_movie():
     """adds a movie"""
-    name = input(
-        "\n  Please enter the name of the movie you want to add:\n\n  "
-    )
+    is_not_valid = True
+    while is_not_valid:
+        name = input(
+            "\n  Please enter the name of the movie you want to add:\n\n  "
+        )
+        # check if movie name given
+        if not name:
+            print_message("Error! Movie name cannot be empty.")
+            wait_for_enter()
+            clear_screen()
+            print_title()
+        else:
+            is_not_valid = False
+            break
 
     movies = movie_storage.get_movies()
 
-    # check if movie name given
-    if len(name) == 0:
-        print_message("Error! Movie name cannot be empty.")
     # check if movie name already exists in the database
-    elif movies.get(name) is None:
-        year = int(
-            input(
-                "\n  Please enter the year of the movie you want to add:"
-                + "\n\n  "
-            )
-            or "0"
+    if movies.get(name) is None:
+        # get year
+        while True:
+            try:
+                year = int(
+                    input(
+                        "\n  Please enter the year of the movie "
+                        + "you want to add:\n\n  "
+                    )
+                )
+                break
+            except ValueError:
+                print("\n  Sorry, that was not a number.")
+        # get rating
+        while True:
+            try:
+                rating = float(
+                    input("\n  Please enter a rating for the movie"
+                         + " you want to add:\n\n  ")
+                )
+                if 0 <= rating <= 10:
+                    break
+            except ValueError:
+                print("\n  That was not a number.")
+            finally:
+                print("\n  Please enter a valid number between 0 and 10!")
+
+        # save movie
+        movie_storage.add_movie(name, year, rating)
+
+        print_message(
+            f"Added {name} ({year}) "
+            + f"with the rating {rating} to the database."
         )
-        rating = float(
-            input(
-                "\n  Please enter the rating of the movie you want to add:"
-                + "\n\n  "
-            )
-            or "0"
-        )
-        # check if rating was given
-        if year == 0 or rating == 0:
-            print_message("Error! Movie info not complete.")
-        else:
-            movie_storage.add_movie(name, year, rating)
-            print_message(
-                f"Added {name} ({year}) "
-                + f"with the rating {rating} to the database."
-            )
-        # no rating given
-    # key name already in dict
     else:
         print_message(f"Error! Movie {name} is already in the database.")
 
@@ -77,19 +93,23 @@ def delete_movie():
         "\n  Please enter the name of the movie you want to delete:\n\n  "
     )
 
-    movies = movie_storage.get_movies()
-
-    if movies.get(name) is not None:
-        info = movies[name]
-        movie_storage.delete_movie(name)
-        print_message(
-            f"Removed {name} ({info['year']}) "
-            + f"with the rating {info['rating']} from the database."
-        )
+    if not name:
+        print_message("Sorry, you did not enter a movie name!")
     else:
-        print_message(
-            f"Sorry, the movie with the name {name} is not in the database."
-        )
+        movies = movie_storage.get_movies()
+
+        if movies.get(name) is not None:
+            info = movies[name]
+            movie_storage.delete_movie(name)
+            print_message(
+                f"Removed {name} ({info['year']}) "
+                + f"with the rating {info['rating']} from the database."
+            )
+        else:
+            print_message(
+                f"Sorry, the movie with the name {name} "
+                + "is not in the database."
+            )
 
 
 def update_movie():
@@ -100,22 +120,35 @@ def update_movie():
         "\n  Please enter the name of the movie you want to update:\n\n  "
     )
 
-    movies = movie_storage.get_movies()
-
-    if movies.get(name) is not None:
-        rating = float(
-            input("\n  Please enter the new rating of the movie:\n\n  ") or "0"
-        )
-        info = movies[name]
-        movie_storage.update_movie(name, rating)
-        print_message(
-            f"Updated the movie {name} from {info['year']} "
-            + f"with the new rating {info['rating']}."
-        )
+    if not name:
+        print_message("Sorry, you did not enter a movie name!")
     else:
-        print_message(
-            f"Sorry, the movie with the name {name} is not in the database."
-        )
+        movies = movie_storage.get_movies()
+
+        if movies.get(name) is not None:
+            while True:
+                try:
+                    rating = float(
+                        input("\n  Please enter a new rating"
+                             + " for the movie:\n\n  ")
+                    )
+                    if 0 <= rating <= 10:
+                        break
+                except ValueError:
+                    print("\n  That was not a number.")
+                finally:
+                    print("\n  Please enter a valid number between 0 and 10!")
+            info = movies[name]
+            movie_storage.update_movie(name, rating)
+            print_message(
+                f"Updated the movie {name} from {info['year']} "
+                + f"with the new rating {rating}."
+            )
+        else:
+            print_message(
+                f"Sorry, the movie with the name {name} "
+                + "is not in the database."
+            )
 
 
 def show_stats():
@@ -198,19 +231,24 @@ def search_movie():
     """case insensitive search by partial name"""
     search_term = input("\n  Enter the search term:\n\n  ")
 
-    movies = movie_storage.get_movies()
-    # adds value movie to the list while iterating
-    # through the dict keys the condition is met
-    search_results = [
-        movie for movie in movies if search_term.lower() in movie.lower()
-    ]
-
-    if search_results:
-        print("\n  Here are the search results:")
-        for result in search_results:
-            print(f"\n  {result}: {movies.get(result)}")
+    if not search_term:
+        print("\n  No search term given. Listing all movies!")
+        list_movies()
     else:
-        print("\n  Sorry, no matching movie found.")
+        movies = movie_storage.get_movies()
+        # adds value movie to the list while iterating
+        # through the dict keys the condition is met
+        search_results = [
+            movie for movie in movies if search_term.lower() in movie.lower()
+        ]
+
+        if search_results:
+            print("\n  Here are the search results:")
+            for result in search_results:
+                print(f"\n  {result} ({movies[result]["year"]})"
+                      + f": {movies[result]["rating"]}")
+        else:
+            print("\n  Sorry, no matching movie found.")
 
 
 def sorted_movies():
