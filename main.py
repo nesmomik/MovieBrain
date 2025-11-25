@@ -1,5 +1,5 @@
 from random import randint
-from statistics import median
+from statistics import median, mean
 
 from movie_db import movies
 from ui_helper_functions import (
@@ -18,8 +18,8 @@ def list_movies():
         print(f"\n  There are {len(movies)} movies in the database.\n")
 
         # print all movies by iterating through dict items
-        for movie, rating in movies.items():
-            print(f"  {movie}: {rating}")
+        for movie, info in movies.items():
+            print(f"  {movie} ({info['year']}): {info['rating']}")
     else:
         print("\n  The database is empty!")
 
@@ -34,6 +34,13 @@ def add_movie():
         print_message("Error! Movie name cannot be empty.")
     # check if movie name already exists in the database
     elif movies.get(name) is None:
+        year = int(
+            input(
+                "\n  Please enter the year of the movie you want to add:"
+                + "\n\n  "
+            )
+            or "0"
+        )
         rating = float(
             input(
                 "\n  Please enter the rating of the movie you want to add:"
@@ -42,13 +49,14 @@ def add_movie():
             or "0"
         )
         # check if rating was given
-        if rating == 0:
-            print_message("Error! Movie rating cannot be empty.")
+        if year == 0 or rating == 0:
+            print_message("Error! Movie info not complete.")
         else:
             # update dict with new key:value pair
-            movies.update({name: rating})
+            movies[name] = {"year": year, "rating": rating}
             print_message(
-                f"Added {name} with the rating {rating} to the database."
+                f"Added {name} ({year}) "
+                + f"with the rating {rating} to the database."
             )
         # no rating given
     # key name already in dict
@@ -66,9 +74,10 @@ def delete_movie():
 
     if movies.get(name) is not None:
         # remove dict item by passing key to pop() method, returns value
-        rating = movies.pop(name)
+        info = movies.pop(name)
         print_message(
-            f"Removed {name} with the rating {rating} from the database."
+            f"Removed {name} ({info['year']}) "
+            + f"with the rating {info['rating']} from the database."
         )
     else:
         print_message(
@@ -88,9 +97,11 @@ def update_movie():
         rating = float(
             input("\n  Please enter the new rating of the movie:\n\n  ") or "0"
         )
-        movies.update({name: rating})
+        movies[name].update(rating=rating)
+        info = movies[name]
         print_message(
-            f"Updated the movie {name} " + "with the new rating {rating}."
+            f"Updated the movie {name} from {info['year']} "
+            + f"with the new rating {info['rating']}."
         )
     else:
         print_message(
@@ -106,10 +117,12 @@ def show_stats():
     if movies:
         print("\n  Here are some fresh stats from the database:")
 
+        # get list of all movie ratings
+        rating_list = []
+        for movie in movies.values():
+            rating_list.append(movie["rating"])
         # calculate and print average
-        rating_list = list(movies.values())
-        list_length = len(movies)
-        avg_rating = sum(rating_list) / list_length
+        avg_rating = mean(rating_list)
         print(
             "\n\n  The average rating of the movies is: "
             + f"{round(avg_rating, 1)}"
@@ -125,23 +138,29 @@ def show_stats():
         max_rating = max(rating_list)
         best_movies = []
         # build list by iterating through dict items
-        for movie, rating in movies.items():
-            if rating == max_rating:
+        for movie in movies:
+            if movies[movie]["rating"] == max_rating:
                 best_movies.append(movie)
 
         print("\n  The best rated movie(s):")
         for movie in best_movies:
-            print(f"\n  {movie}: {movies.get(movie)}")
+            print(
+                f"\n  {movie} ({movies[movie]['year']}): "
+                + f"{movies[movie]['rating']}"
+            )
 
         # get minimum rating and print movie(s) with min rating
         min_rating = min(rating_list)
         # build list with list comprehension
         worst_movies = [
-            movie for movie, rating in movies.items() if rating == min_rating
+            movie for movie in movies if movies[movie]["rating"] == min_rating
         ]
         print("\n  The worst rated movie(s):")
         for movie in worst_movies:
-            print(f"\n  {movie}: {movies.get(movie)}")
+            print(
+                f"\n  {movie} ({movies[movie]['year']}): "
+                + f"{movies[movie]['rating']}"
+            )
     else:
         print("\n  The database is empty!")
 
@@ -151,17 +170,13 @@ def random_movie():
     # check for movies in database
     if movies:
         print("\n  Here is a random movie from the database:")
-
-        i = 0
         # generate random index
-        movie_index = randint(0, len(movies))
+        index = randint(0, len(movies))
         # get movie info for index
-        for movie, rating in movies.items():
-            if i == movie_index:
-                break
-            i += 1
+        names = list(movies.keys())
+        info = movies[names[index]]
         # print movie info
-        print(f"\n\n\n  {movie}: {rating}\n\n")
+        print(f"\n\n\n  {names[index]} ({info['year']}): {info['rating']}\n\n")
     else:
         print("\n  The database is empty!")
 
@@ -170,36 +185,31 @@ def search_movie():
     """case insensitive search by partial name"""
     search_term = input("\n  Enter the search term:\n\n  ")
 
-    # adds value movie to the list when while iterating
+    # adds value movie to the list while iterating
     # through the dict keys the condition is met
     search_results = [
         movie for movie in movies.keys() if search_term.lower() in movie.lower()
     ]
 
-    print("\n  Here are the search results:")
-
-    for result in search_results:
-        print(f"\n  {result}: {movies.get(result)}")
-
-
-def get_rating(list_item):
-    """used to provide the key for the sort in sorted_movies"""
-    return list_item[1]
+    if search_results:
+        print("\n  Here are the search results:")
+        for result in search_results:
+            print(f"\n  {result}: {movies.get(result)}")
+    else:
+        print("\n  Sorry, no matching movie found.")
 
 
 def sorted_movies():
-    """show a sorted list of all movies"""
+    """show a list of all movies sorted by rating"""
     print("\n  Here is the movie list sorted by rating:\n")
 
-    movie_tuple_list = []
-    # create list of tupels
-    for movie, rating in movies.items():
-        movie_tuple_list.append((movie, rating))
-    # sort tuple list by rating in descending order
-    movie_tuple_list.sort(reverse=True, key=get_rating)
+    sorted_list = sorted(
+        movies, key=lambda movie: movies[movie]["rating"], reverse=True
+    )
 
-    for movie, rating in movie_tuple_list:
-        print(f"  {movie}: {rating}")
+    for movie in sorted_list:
+        info = movies[movie]
+        print(f"  {movie} ({info['year']}): {info['rating']}")
 
 
 menu = {
@@ -246,32 +256,6 @@ def main():
             break
         else:
             print_message("Sorry, wrong Choice!")
-
-        #        # TODO: Refactor to dispatch table
-        #        if choice == "1":
-        #            list_movies()
-        #        elif choice == "2":
-        #            add_movie()
-        #        elif choice == "3":
-        #            delete_movie()
-        #        elif choice == "4":
-        #            update_movie()
-        #        elif choice == "5":
-        #            show_stats()
-        #        elif choice == "6":
-        #            random_movie()
-        #        elif choice == "7":
-        #            search_movie()
-        #        elif choice == "8":
-        #            sorted_movies()
-        #        elif choice == "9":
-        #            print_intro()
-        #        elif choice == "0":
-        #            isTrue = False
-        #            clear_screen()
-        #            break
-        #        else:
-        #            print_message("Sorry, wrong Choice!")
 
         wait_for_enter()
 

@@ -1,13 +1,13 @@
 # Dictionary to store the movies and the rating
 movies = {
-    "The Shawshank Redemption": 9.5,
-    "Pulp Fiction": 8.8,
-    "The Room": 3.6,
-    "The Godfather": 9.2,
-    "The Godfather: Part II": 9.0,
-    "The Dark Knight": 9.0,
-    "12 Angry Men": 8.9,
-    "Everything Everywhere All At Once": 8.9,
-    "Forrest Gump": 8.8,
-    "Star Wars: Episode V": 8.7,
+    "The Shawshank Redemption": {"rating": 9.3, "year": 1994},
+    "Pulp Fiction": {"rating": 8.8, "year": 1994},
+    "The Room": {"rating": 3.6, "year": 2003},
+    "The Godfather": {"rating": 9.2, "year": 1972},
+    "The Godfather: Part II": {"rating": 9.0, "year": 1974},
+    "The Dark Knight": {"rating": 9.1, "year": 2008},
+    "12 Angry Men": {"rating": 9.0, "year": 1957},
+    "Everything Everywhere All At Once": {"rating": 7.7, "year": 2022},
+    "Forrest Gump": {"rating": 8.8, "year": 1994},
+    "Star Wars: Episode V": {"rating": 8.7, "year": 1980},
 }
