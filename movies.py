@@ -299,8 +299,8 @@ def filter_movies():
         start = get_rating("\n  Please enter the start rating:\n\n  ")
         end = get_rating("\n  Please enter the end rating:\n\n  ")
     elif choice == "3" or choice == "4":
-        start = get_rating("\n  Please enter the start year:\n\n  ")
-        end = get_rating("\n  Please enter the end year:\n\n  ")
+        start = get_year("\n  Please enter the start year:\n\n  ")
+        end = get_year("\n  Please enter the end year:\n\n  ")
 
     print(f"\n  Here is the movie list filtered by {info_type}:\n")
 
