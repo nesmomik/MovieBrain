@@ -90,7 +90,7 @@ def print_menu():
   1. List movies            6. Random movie
   2. Add movie              7. Search movie
   3. Delete movie           8. Sort movies
-  4. Update movie           9. Show intro screen
+  4. Update movie           9. Filter movies
   5. Show stats             0. Leave the MovieBrain
 
     """)
@@ -101,10 +101,24 @@ def print_sort_menu():
     print(r"""
   How do you wish to sort the movies:
 
-  1. By rating ascending 
-  2. By rating descending 
-  3. By year ascending 
-  4. By year descending 
+  1. By rating ascending
+  2. By rating descending
+  3. By year ascending
+  4. By year descending
+
+
+""")
+
+def print_filter_menu():
+    """print the sort menu options"""
+
+    print(r"""
+  How do you wish to filter the movies:
+
+  1. By rating ascending
+  2. By rating descending
+  3. By year ascending
+  4. By year descending
 
 
 """)

@@ -10,7 +10,8 @@ from ui_helper_functions import (
     clear_screen,
     wait_for_enter,
     print_message,
-    print_sort_menu
+    print_sort_menu,
+    print_filter_menu
 )
 
 
@@ -253,12 +254,11 @@ def search_movie():
             print("\n  Sorry, no matching movie found.")
 
 
-def sorted_movies(info_type, bool_direction):
-    """show a list of all movies sorted by rating"""
-    print("\n  Here is the movie list sorted by rating:\n")
-
-    movies = movie_storage.get_movies()
-
+def sorted_movies(movies, info_type, bool_direction):
+    """
+    Takes a list of movies, the info_type to sort by and a bool value to
+    specify to sort direction (False for ascending, True for descending)
+    """
     sorted_list = sorted(
         movies, key=lambda movie: movies[movie][info_type],\
                     reverse=bool_direction
@@ -267,6 +267,41 @@ def sorted_movies(info_type, bool_direction):
     for movie in sorted_list:
         info = movies[movie]
         print(f"  {movie} ({info['year']}): {info['rating']}")
+
+
+def print_sub_menu(sub_type):
+    """
+    Prints the sort or filter sub menu according to the sub_type and returns
+    the sort/filter options according to user choice
+    """
+    if sub_type == "sort":
+        print_sort_menu()
+    elif sub_type == "filter":
+        print_sort_menu()
+    else:
+        print_message("Error: Wrong option passed to print_sub_menu.")
+        return
+
+    choice = input("  Enter choice! ")
+    clear_screen()
+
+    if choice == "1":
+        info_type = "rating"
+        bool_direction = False
+    elif choice == "2":
+        info_type = "rating"
+        bool_direction = True
+    elif choice == "3":
+        info_type = "year"
+        bool_direction = False
+    elif choice == "4":
+        info_type = "year"
+        bool_direction = True
+    else:
+        print_message("Sorry, invalid choice!")
+        return
+
+    return info_type, bool_direction
 
 
 def sort_movies():
@@ -279,15 +314,114 @@ def sort_movies():
     clear_screen()
 
     if choice == "1":
-        sorted_movies("rating", False)
+        info_type = "rating"
+        bool_direction = False
     elif choice == "2":
-        sorted_movies("rating", True)
+        info_type = "rating"
+        bool_direction = True
     elif choice == "3":
-        sorted_movies("year", False)
+        info_type = "year"
+        bool_direction = False
     elif choice == "4":
-        sorted_movies("year", True)
+        info_type = "year"
+        bool_direction = True
     else:
         print_message("Sorry, invalid choice!")
+        return
+
+    print(f"\n  Here is the movie list sorted by {info_type}:\n")
+
+    movies = movie_storage.get_movies()
+    sorted_movies(movies, info_type, bool_direction)
+
+
+def filter_movies():
+    """
+    Shows a menu with the filter options and calls the functions
+    to display the results.
+    """
+    print_filter_menu()
+    choice = input("  Enter choice! ")
+    clear_screen()
+
+    print("\n  Please enter the start and end value to filter by.")
+
+    if choice == "1" or choice == "2":
+        while True:
+            try:
+                start = float(
+                    input("\n  Please enter the start rating:\n\n  ")
+                )
+                if 0 <= start <= 10:
+                    break
+            except ValueError:
+                print("\n  That was not a number.")
+            finally:
+                print("\n  Please enter a valid number between 0 and 10!")
+        while True:
+            try:
+                end = float(
+                    input("\n  Please enter the end rating:\n\n  ")
+                )
+                if 0 <= end <= 10:
+                    break
+            except ValueError:
+                print("\n  That was not a number.")
+            finally:
+                print("\n  Please enter a valid number between 0 and 10!")
+    elif choice == "3" or choice == "4":
+        while True:
+            try:
+                start = int(
+                    input("\n  Please enter the start year:\n\n  ")
+                )
+                break
+            except ValueError:
+                print("\n  Sorry, that was not a number.")
+        while True:
+            try:
+                end = int(
+                    input("\n  Please enter the end year:\n\n  ")
+                )
+                break
+            except ValueError:
+                print("\n  Sorry, that was not a number.")
+
+    if choice == "1":
+        info_type = "rating"
+        bool_direction = False
+    elif choice == "2":
+        info_type = "rating"
+        bool_direction = True
+    elif choice == "3":
+        info_type = "year"
+        bool_direction = False
+    elif choice == "4":
+        info_type = "year"
+        bool_direction = True
+    else:
+        print_message("Sorry, invalid choice!")
+        return
+
+    print(f"\n  Here is the movie list filtered by {info_type}:\n")
+
+    movies = movie_storage.get_movies()
+    filtered_movies = get_filtered_movies(movies, info_type, start, end)
+    sorted_movies(filtered_movies, info_type, bool_direction)
+
+
+def get_filtered_movies(movies, info_type, start, end):
+
+    movies = movie_storage.get_movies()
+
+    results = {}
+
+    for movie in movies:
+        info = movies[movie]
+        if start <= info[info_type] <= end:
+            results[movie] = info
+
+    return results
 
 
 menu = {
@@ -299,7 +433,7 @@ menu = {
     "6": random_movie,
     "7": search_movie,
     "8": sort_movies,
-    "9": print_intro
+    "9": filter_movies
 }
 
 
