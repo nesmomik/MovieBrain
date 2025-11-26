@@ -122,3 +122,39 @@ def print_filter_menu():
 
 
 """)
+
+
+def print_sub_menu(sub_type):
+    """
+    Prints the sort or filter sub menu according to the sub_type and returns
+    the sort/filter options according to user choice
+    """
+    if sub_type == "sort":
+        print_sort_menu()
+    elif sub_type == "filter":
+        print_filter_menu()
+    else:
+        print_message("Error: Wrong option passed to print_sub_menu.")
+        return
+
+    choice = input("  Enter choice! ")
+    clear_screen()
+
+    if choice == "1":
+        info_type = "rating"
+        bool_direction = False
+    elif choice == "2":
+        info_type = "rating"
+        bool_direction = True
+    elif choice == "3":
+        info_type = "year"
+        bool_direction = False
+    elif choice == "4":
+        info_type = "year"
+        bool_direction = True
+    else:
+        print_message("Sorry, invalid choice!")
+        return
+
+    return choice, info_type, bool_direction
+

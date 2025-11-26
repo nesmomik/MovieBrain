@@ -10,8 +10,7 @@ from ui_helper_functions import (
     clear_screen,
     wait_for_enter,
     print_message,
-    print_sort_menu,
-    print_filter_menu
+    print_sub_menu
 )
 
 
@@ -268,66 +267,13 @@ def sorted_movies(movies, info_type, bool_direction):
         info = movies[movie]
         print(f"  {movie} ({info['year']}): {info['rating']}")
 
-
-def print_sub_menu(sub_type):
-    """
-    Prints the sort or filter sub menu according to the sub_type and returns
-    the sort/filter options according to user choice
-    """
-    if sub_type == "sort":
-        print_sort_menu()
-    elif sub_type == "filter":
-        print_sort_menu()
-    else:
-        print_message("Error: Wrong option passed to print_sub_menu.")
-        return
-
-    choice = input("  Enter choice! ")
-    clear_screen()
-
-    if choice == "1":
-        info_type = "rating"
-        bool_direction = False
-    elif choice == "2":
-        info_type = "rating"
-        bool_direction = True
-    elif choice == "3":
-        info_type = "year"
-        bool_direction = False
-    elif choice == "4":
-        info_type = "year"
-        bool_direction = True
-    else:
-        print_message("Sorry, invalid choice!")
-        return
-
-    return info_type, bool_direction
-
-
 def sort_movies():
     """
     Shows a menu with the sort options and calls the functions
     to display the results.
     """
-    print_sort_menu()
-    choice = input("  Enter choice! ")
-    clear_screen()
 
-    if choice == "1":
-        info_type = "rating"
-        bool_direction = False
-    elif choice == "2":
-        info_type = "rating"
-        bool_direction = True
-    elif choice == "3":
-        info_type = "year"
-        bool_direction = False
-    elif choice == "4":
-        info_type = "year"
-        bool_direction = True
-    else:
-        print_message("Sorry, invalid choice!")
-        return
+    _, info_type, bool_direction = print_sub_menu("sort")
 
     print(f"\n  Here is the movie list sorted by {info_type}:\n")
 
@@ -340,9 +286,7 @@ def filter_movies():
     Shows a menu with the filter options and calls the functions
     to display the results.
     """
-    print_filter_menu()
-    choice = input("  Enter choice! ")
-    clear_screen()
+    choice, info_type, bool_direction = print_sub_menu("filter")
 
     print("\n  Please enter the start and end value to filter by.")
 
@@ -386,22 +330,6 @@ def filter_movies():
                 break
             except ValueError:
                 print("\n  Sorry, that was not a number.")
-
-    if choice == "1":
-        info_type = "rating"
-        bool_direction = False
-    elif choice == "2":
-        info_type = "rating"
-        bool_direction = True
-    elif choice == "3":
-        info_type = "year"
-        bool_direction = False
-    elif choice == "4":
-        info_type = "year"
-        bool_direction = True
-    else:
-        print_message("Sorry, invalid choice!")
-        return
 
     print(f"\n  Here is the movie list filtered by {info_type}:\n")
 
