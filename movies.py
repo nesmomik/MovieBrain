@@ -10,7 +10,7 @@ from ui_helper_functions import (
     clear_screen,
     wait_for_enter,
     print_message,
-    print_sub_menu
+    print_sub_menu,
 )
 
 
@@ -30,6 +30,7 @@ def list_movies():
 
 
 def get_rating(message):
+    """prints the message and returns a rating"""
     while True:
         try:
             rating = float(input(message))
@@ -44,12 +45,14 @@ def get_rating(message):
 
 
 def get_year(message):
+    """prints the message and returns a year"""
     while True:
         try:
             year = int(input(message))
             break
         except ValueError:
             print("\n  Sorry, that was not a number.")
+
     return year
 
 
@@ -75,11 +78,14 @@ def add_movie():
     # check if movie name already exists in the database
     if movies.get(name) is None:
         # get year
-        year = get_year("\n  Please enter the year of the movie "
-                    + "you want to add:\n\n  ")
+        year = get_year(
+            "\n  Please enter the year of the movie " + "you want to add:\n\n  "
+        )
         # get rating
-        rating = get_rating("\n  Please enter a rating for the movie"
-                             + " you want to add:\n\n  ")
+        rating = get_rating(
+            "\n  Please enter a rating for the movie"
+            + " you want to add:\n\n  "
+        )
         # save movie
         movie_storage.add_movie(name, year, rating)
 
@@ -132,8 +138,9 @@ def update_movie():
         movies = movie_storage.get_movies()
 
         if movies.get(name) is not None:
-            new_rating = get_rating("\n  Please enter a new rating"
-                                + " for the movie:\n\n  ")
+            new_rating = get_rating(
+                "\n  Please enter a new rating" + " for the movie:\n\n  "
+            )
             info = movies[name]
             movie_storage.update_movie(name, new_rating)
             print_message(
@@ -241,8 +248,10 @@ def search_movie():
         if search_results:
             print("\n  Here are the search results:")
             for result in search_results:
-                print(f"\n  {result} ({movies[result]["year"]})"
-                      + f": {movies[result]["rating"]}")
+                print(
+                    f"\n  {result} ({movies[result]['year']})"
+                    + f": {movies[result]['rating']}"
+                )
         else:
             print("\n  Sorry, no matching movie found.")
 
@@ -253,13 +262,15 @@ def sorted_movies(movies, info_type, bool_direction):
     specify to sort direction (False for ascending, True for descending)
     """
     sorted_list = sorted(
-        movies, key=lambda movie: movies[movie][info_type],\
-                    reverse=bool_direction
+        movies,
+        key=lambda movie: movies[movie][info_type],
+        reverse=bool_direction,
     )
 
     for movie in sorted_list:
         info = movies[movie]
         print(f"  {movie} ({info['year']}): {info['rating']}")
+
 
 def sort_movies():
     """
@@ -299,7 +310,10 @@ def filter_movies():
 
 
 def get_filtered_movies(movies, info_type, start, end):
-
+    """
+    Filters a dict of dict of movies according to info_type
+    and start and end values
+    """
     movies = movie_storage.get_movies()
 
     results = {}
@@ -321,7 +335,7 @@ menu = {
     "6": random_movie,
     "7": search_movie,
     "8": sort_movies,
-    "9": filter_movies
+    "9": filter_movies,
 }
 
 
