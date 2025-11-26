@@ -95,6 +95,7 @@ def print_menu():
 
     """)
 
+
 def print_sort_menu():
     """print the sort menu options"""
 
@@ -108,6 +109,7 @@ def print_sort_menu():
 
 
 """)
+
 
 def print_filter_menu():
     """print the sort menu options"""
@@ -157,4 +159,3 @@ def print_sub_menu(sub_type):
         return
 
     return choice, info_type, bool_direction
-
