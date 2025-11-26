@@ -10,6 +10,7 @@ from ui_helper_functions import (
     clear_screen,
     wait_for_enter,
     print_message,
+    print_sort_menu
 )
 
 
@@ -252,19 +253,41 @@ def search_movie():
             print("\n  Sorry, no matching movie found.")
 
 
-def sorted_movies():
+def sorted_movies(info_type, bool_direction):
     """show a list of all movies sorted by rating"""
     print("\n  Here is the movie list sorted by rating:\n")
 
     movies = movie_storage.get_movies()
 
     sorted_list = sorted(
-        movies, key=lambda movie: movies[movie]["rating"], reverse=True
+        movies, key=lambda movie: movies[movie][info_type],\
+                    reverse=bool_direction
     )
 
     for movie in sorted_list:
         info = movies[movie]
         print(f"  {movie} ({info['year']}): {info['rating']}")
+
+
+def sort_movies():
+    """
+    Shows a menu with the sort options and calls the functions
+    to display the results.
+    """
+    print_sort_menu()
+    choice = input("  Enter choice! ")
+    clear_screen()
+
+    if choice == "1":
+        sorted_movies("rating", False)
+    elif choice == "2":
+        sorted_movies("rating", True)
+    elif choice == "3":
+        sorted_movies("year", False)
+    elif choice == "4":
+        sorted_movies("year", True)
+    else:
+        print_message("Sorry, invalid choice!")
 
 
 menu = {
@@ -275,7 +298,7 @@ menu = {
     "5": show_stats,
     "6": random_movie,
     "7": search_movie,
-    "8": sorted_movies,
+    "8": sort_movies,
     "9": print_intro
 }
 
@@ -307,7 +330,7 @@ def main():
             print_exit()
             break
         else:
-            print_message("Sorry, wrong Choice!")
+            print_message("Sorry, invalid choice!")
 
         wait_for_enter()
 
