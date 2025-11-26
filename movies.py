@@ -29,6 +29,30 @@ def list_movies():
         print("\n  The database is empty!")
 
 
+def get_rating(message):
+    while True:
+        try:
+            rating = float(input(message))
+            if 0 <= rating <= 10:
+                return rating
+        except ValueError:
+            print("\n  That was not a number.")
+
+        print("\n  Please enter a valid number between 0 and 10!")
+
+    return rating
+
+
+def get_year(message):
+    while True:
+        try:
+            year = int(input(message))
+            break
+        except ValueError:
+            print("\n  Sorry, that was not a number.")
+    return year
+
+
 def add_movie():
     """adds a movie"""
     is_not_valid = True
@@ -51,31 +75,11 @@ def add_movie():
     # check if movie name already exists in the database
     if movies.get(name) is None:
         # get year
-        while True:
-            try:
-                year = int(
-                    input(
-                        "\n  Please enter the year of the movie "
-                        + "you want to add:\n\n  "
-                    )
-                )
-                break
-            except ValueError:
-                print("\n  Sorry, that was not a number.")
+        year = get_year("\n  Please enter the year of the movie "
+                    + "you want to add:\n\n  ")
         # get rating
-        while True:
-            try:
-                rating = float(
-                    input("\n  Please enter a rating for the movie"
-                         + " you want to add:\n\n  ")
-                )
-                if 0 <= rating <= 10:
-                    break
-            except ValueError:
-                print("\n  That was not a number.")
-            finally:
-                print("\n  Please enter a valid number between 0 and 10!")
-
+        rating = get_rating("\n  Please enter a rating for the movie"
+                             + " you want to add:\n\n  ")
         # save movie
         movie_storage.add_movie(name, year, rating)
 
@@ -128,23 +132,13 @@ def update_movie():
         movies = movie_storage.get_movies()
 
         if movies.get(name) is not None:
-            while True:
-                try:
-                    rating = float(
-                        input("\n  Please enter a new rating"
-                             + " for the movie:\n\n  ")
-                    )
-                    if 0 <= rating <= 10:
-                        break
-                except ValueError:
-                    print("\n  That was not a number.")
-                finally:
-                    print("\n  Please enter a valid number between 0 and 10!")
+            new_rating = get_rating("\n  Please enter a new rating"
+                                + " for the movie:\n\n  ")
             info = movies[name]
-            movie_storage.update_movie(name, rating)
+            movie_storage.update_movie(name, new_rating)
             print_message(
                 f"Updated the movie {name} from {info['year']} "
-                + f"with the new rating {rating}."
+                + f"with the new rating {new_rating}."
             )
         else:
             print_message(
@@ -291,45 +285,11 @@ def filter_movies():
     print("\n  Please enter the start and end value to filter by.")
 
     if choice == "1" or choice == "2":
-        while True:
-            try:
-                start = float(
-                    input("\n  Please enter the start rating:\n\n  ")
-                )
-                if 0 <= start <= 10:
-                    break
-            except ValueError:
-                print("\n  That was not a number.")
-            finally:
-                print("\n  Please enter a valid number between 0 and 10!")
-        while True:
-            try:
-                end = float(
-                    input("\n  Please enter the end rating:\n\n  ")
-                )
-                if 0 <= end <= 10:
-                    break
-            except ValueError:
-                print("\n  That was not a number.")
-            finally:
-                print("\n  Please enter a valid number between 0 and 10!")
+        start = get_rating("\n  Please enter the start rating:\n\n  ")
+        end = get_rating("\n  Please enter the end rating:\n\n  ")
     elif choice == "3" or choice == "4":
-        while True:
-            try:
-                start = int(
-                    input("\n  Please enter the start year:\n\n  ")
-                )
-                break
-            except ValueError:
-                print("\n  Sorry, that was not a number.")
-        while True:
-            try:
-                end = int(
-                    input("\n  Please enter the end year:\n\n  ")
-                )
-                break
-            except ValueError:
-                print("\n  Sorry, that was not a number.")
+        start = get_rating("\n  Please enter the start year:\n\n  ")
+        end = get_rating("\n  Please enter the end year:\n\n  ")
 
     print(f"\n  Here is the movie list filtered by {info_type}:\n")
 
