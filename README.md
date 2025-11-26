@@ -6,4 +6,4 @@ Install by executing '''git clone https://github.com/nesmomik/MovieBrain.git''' 
 
 Change into the directory with '''cd MovieBrain'''.
 
-Start the game with '''python main.py'''.
+Start the program with '''python movies.py'''.
