@@ -1,8 +1,10 @@
 from random import randint
 from statistics import median, mean
+from dotenv import dotenv_values
+import requests
 
 # switch between json and sql storage
-#from db_handler import movie_storage_json as storage
+# from db_handler import movie_storage_json as storage
 from db_handler import movie_storage_sql as storage
 
 from ui_helper import (
@@ -13,8 +15,11 @@ from ui_helper import (
     clear_screen,
     wait_for_enter,
     print_message,
-    print_sub_menu
+    print_sub_menu,
 )
+
+# read api key from .env file
+OMDB_API_KEY = dotenv_values(".env")["OMDB_API_KEY"]
 
 
 def list_movies():
@@ -78,24 +83,40 @@ def add_movie():
 
     movies = storage.get_movies()
 
-    # check if movie name already exists in the database
-    if movies.get(name) is None:
-        # get year
-        year = get_year(
-            "\n  Please enter the year of the movie " + "you want to add:\n\n  "
-        )
-        # get rating
-        rating = get_rating(
-            "\n  Please enter a rating for the movie"
-            + " you want to add:\n\n  "
-        )
-        # save movie
-        storage.add_movie(name, year, rating)
+    payload = {'apikey': OMDB_API_KEY, 't': name}
+    try:
+        response = requests.get(
+            'https://www.omdbapi.com/',
+            params=payload,
+            timeout=5
+            )
+    except requests.exceptions.ConnectionError:
+        print_message("Sorry, can't connect to the search API.")
+        return
+    except requests.exceptions.Timeout:
+        print_message("Sorry, the connection timed out.")
+        return
 
-        print_message(
-            f"Added {name} ({year}) "
-            + f"with the rating {rating} to the database."
-        )
+    # response is a json object so data is a dictionary
+    data = response.json()
+
+    if data['Response'] == "True":
+        # check if movie name already exists in the database
+        if movies.get(data['Title']) is None:
+            # save movie
+            storage.add_movie(
+                data['Title'],
+                data['Year'],
+                data['imdbRating'],
+                data['Poster']
+            )
+
+            print_message(
+                f"Added {data['Title']} ({data['Year']}) "
+                + f"with the rating {data['imdbRating']} to the database."
+            )
+        else:
+            print_message("Sorry, no movie found!")
     else:
         print_message(f"Error! Movie {name} is already in the database.")
 
