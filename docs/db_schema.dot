@@ -1,0 +1,13 @@
+digraph ERD {
+    graph [rankdir=LR];  // left-to-right layout
+    node [shape=record, fontname=Helvetica];
+
+    movies [
+        label="{ movies | 
+            { id : INTEGER (PK) | 
+              title : TEXT (UNIQUE, NOT NULL) | 
+              year : INTEGER (NOT NULL) | 
+              rating : REAL (NOT NULL) }
+        }"
+    ];
+}
