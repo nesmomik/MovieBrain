@@ -2,10 +2,10 @@ from random import randint
 from statistics import median, mean
 
 # switch between json and sql storage
-# import movie_storage_json as storage
-import movie_storage_sql as storage
+#from db_handler import movie_storage_json as storage
+from db_handler import movie_storage_sql as storage
 
-from ui_helper_functions import (
+from ui_helper import (
     print_intro,
     print_exit,
     print_menu,
@@ -13,13 +13,13 @@ from ui_helper_functions import (
     clear_screen,
     wait_for_enter,
     print_message,
-    print_sub_menu,
+    print_sub_menu
 )
 
 
 def list_movies():
     """list all movies"""
-    # load movies from json file
+    # load movies from the database
     movies = storage.get_movies()
 
     if movies:

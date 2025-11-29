@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 
-# Define the database URL
-DB_URL = "sqlite:///movies.db"
+# Define the database URL as relative path
+DB_URL = "sqlite:///data/moviebrain.db"
 
 # Create the engine
 # TODO: remove echo=True to disable debug info

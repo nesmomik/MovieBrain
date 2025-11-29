@@ -1,6 +1,6 @@
 import json
 
-JSON_DATA_FILE = "data.json"
+JSON_DATA_FILE = "data/moviebrain.json"
 
 
 def test_func():
