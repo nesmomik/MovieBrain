@@ -1,7 +1,10 @@
 from random import randint
 from statistics import median, mean
 
-import movie_storage
+# switch between json and sql storage
+# import movie_storage_json as storage
+import movie_storage_sql as storage
+
 from ui_helper_functions import (
     print_intro,
     print_exit,
@@ -17,7 +20,7 @@ from ui_helper_functions import (
 def list_movies():
     """list all movies"""
     # load movies from json file
-    movies = movie_storage.get_movies()
+    movies = storage.get_movies()
 
     if movies:
         print(f"\n  There are {len(movies)} movies in the database.\n")
@@ -73,7 +76,7 @@ def add_movie():
             is_not_valid = False
             break
 
-    movies = movie_storage.get_movies()
+    movies = storage.get_movies()
 
     # check if movie name already exists in the database
     if movies.get(name) is None:
@@ -87,7 +90,7 @@ def add_movie():
             + " you want to add:\n\n  "
         )
         # save movie
-        movie_storage.add_movie(name, year, rating)
+        storage.add_movie(name, year, rating)
 
         print_message(
             f"Added {name} ({year}) "
@@ -108,11 +111,11 @@ def delete_movie():
     if not name:
         print_message("Sorry, you did not enter a movie name!")
     else:
-        movies = movie_storage.get_movies()
+        movies = storage.get_movies()
 
         if movies.get(name) is not None:
             info = movies[name]
-            movie_storage.delete_movie(name)
+            storage.delete_movie(name)
             print_message(
                 f"Removed {name} ({info['year']}) "
                 + f"with the rating {info['rating']} from the database."
@@ -135,14 +138,14 @@ def update_movie():
     if not name:
         print_message("Sorry, you did not enter a movie name!")
     else:
-        movies = movie_storage.get_movies()
+        movies = storage.get_movies()
 
         if movies.get(name) is not None:
             new_rating = get_rating(
                 "\n  Please enter a new rating" + " for the movie:\n\n  "
             )
             info = movies[name]
-            movie_storage.update_movie(name, new_rating)
+            storage.update_movie(name, new_rating)
             print_message(
                 f"Updated the movie {name} from {info['year']} "
                 + f"with the new rating {new_rating}."
@@ -159,7 +162,7 @@ def show_stats():
     shows the average and median rating values of all movies and also
     information about the worst and best movies
     """
-    movies = movie_storage.get_movies()
+    movies = storage.get_movies()
 
     if movies:
         print("\n  Here are some fresh stats from the database:")
@@ -214,7 +217,7 @@ def show_stats():
 
 def random_movie():
     """show a random movie"""
-    movies = movie_storage.get_movies()
+    movies = storage.get_movies()
 
     # check for movies in database
     if movies:
@@ -238,7 +241,7 @@ def search_movie():
         print("\n  No search term given. Listing all movies!")
         list_movies()
     else:
-        movies = movie_storage.get_movies()
+        movies = storage.get_movies()
         # adds value movie to the list while iterating
         # through the dict keys the condition is met
         search_results = [
@@ -282,7 +285,7 @@ def sort_movies():
 
     print(f"\n  Here is the movie list sorted by {info_type}:\n")
 
-    movies = movie_storage.get_movies()
+    movies = storage.get_movies()
     sorted_movies(movies, info_type, bool_direction)
 
 
@@ -304,7 +307,7 @@ def filter_movies():
 
     print(f"\n  Here is the movie list filtered by {info_type}:\n")
 
-    movies = movie_storage.get_movies()
+    movies = storage.get_movies()
     filtered_movies = get_filtered_movies(movies, info_type, start, end)
     sorted_movies(filtered_movies, info_type, bool_direction)
 
@@ -314,7 +317,7 @@ def get_filtered_movies(movies, info_type, start, end):
     Filters a dict of dict of movies according to info_type
     and start and end values
     """
-    movies = movie_storage.get_movies()
+    movies = storage.get_movies()
 
     results = {}
 
