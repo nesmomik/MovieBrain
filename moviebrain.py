@@ -29,7 +29,7 @@ def list_movies():
         for movie, info in movies.items():
             print(f"  {movie} ({info['year']}): {info['rating']}")
     else:
-        print("\n  The database is empty!")
+        print_message("\n  The database is empty!")
 
 
 def get_rating(message):
@@ -212,7 +212,7 @@ def show_stats():
                 + f"{movies[movie]['rating']}"
             )
     else:
-        print("\n  The database is empty!")
+        print_message("\n  The database is empty!")
 
 
 def random_movie():
@@ -230,7 +230,7 @@ def random_movie():
         # print movie info
         print(f"\n\n\n  {names[index]} ({info['year']}): {info['rating']}\n\n")
     else:
-        print("\n  The database is empty!")
+        print_message("\n  The database is empty!")
 
 
 def search_movie():
