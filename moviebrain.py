@@ -6,6 +6,7 @@ import requests
 # switch between json and sql storage
 # from db_handler import movie_storage_json as storage
 from db_handler import movie_storage_sql as storage
+from html_display import html_generator
 
 from ui_helper import (
     print_intro,
@@ -362,7 +363,6 @@ menu = {
     "9": filter_movies,
 }
 
-
 def main():
     """displays an intro screen and enters the main program loop"""
     print_intro()
@@ -375,6 +375,10 @@ def main():
     while True:
         # show menu screen
         print_menu()
+
+        html_generator.show_link()
+
+        html_generator.generate_html_file()
 
         choice = input("  Enter choice! ")
 

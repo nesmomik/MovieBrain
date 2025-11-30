@@ -26,14 +26,20 @@ with engine.connect() as connection:
 
 
 def get_movies():
-    """Retrieve all movies from the database."""
+    """
+    Retrieve all movies from the database.
+    Returns a dict of dicts, where the keys of the first dict are
+    the movie titles and the values are a dict containing the movie info.
+    """
     with engine.connect() as connection:
         result = connection.execute(
-            text("SELECT title, year, rating FROM movies")
+            text("SELECT title, year, rating, poster FROM movies")
         )
         movies = result.fetchall()
 
-    return {row[0]: {"year": row[1], "rating": row[2]} for row in movies}
+    return {row[0]: {
+        "year": row[1], "rating": row[2], "poster": row[3]
+        } for row in movies}
 
 
 def add_movie(title, year, rating, poster):
@@ -43,7 +49,7 @@ def add_movie(title, year, rating, poster):
             connection.execute(
                 text("""
                      INSERT INTO movies (
-                     title, year, rating
+                     title, year, rating, poster
                      ) VALUES (
                      :title, :year, :rating, :poster
                      )

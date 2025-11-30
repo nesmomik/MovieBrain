@@ -1,0 +1,89 @@
+import os
+from db_handler import movie_storage_sql as storage
+
+HTML_TEMPLATE_FILE = "html_display/template.html"
+HTML_OUTPUT_FILENAME = "html_display/moviebrain.html"
+
+cwd = os.getcwd()
+html_file_path = os.path.join(cwd, HTML_OUTPUT_FILENAME)
+
+#
+def show_link():
+    print(
+        "\033]8;;"
+        + "file:///"
+        + html_file_path
+        + "\033\\"
+        + "  Ctrl+Click here for the browser view."
+        + "\033]8;;\033\\\n"
+        )
+
+
+def read_template(file_path):
+    """Returns the content of the template file as string"""
+    with open(file_path, "r") as handle:
+        return handle.read()
+
+
+def format_data():
+    """Aggregates and returns a string from the data"""
+    movie_dict = storage.get_movies()
+
+    data_string = ""
+
+    if movie_dict:
+        for movie, info in movie_dict.items():
+            data_string += serialize_movie(movie, info)
+    else:
+        data_string += serialize_no_movie()
+
+    return data_string
+
+
+def generate_html_file():
+    write_html(HTML_OUTPUT_FILENAME, create_html_string())
+
+
+def create_html_string():
+    """
+    Reads the template file and replaces the placeholder
+    text with the generated html code
+    """
+    return read_template(HTML_TEMPLATE_FILE).replace(
+        "__REPLACE_MOVIES_INFO__", format_data()
+    )
+
+
+def write_html(file_path, html_string):
+    """Returns the content of the template file as string"""
+    with open(file_path, "w") as handle:
+        handle.write(html_string)
+
+
+def serialize_no_movie():
+    data_string = ""
+    data_string += '<li">\n'
+    data_string += '<div class="movie">\n'
+    data_string += '<img class="movie-poster" src="no_results.jpg"/>\n'
+    data_string += '<div class="movie-title">Sorry, no movies yet.</div>\n'
+    data_string += '<div class="movie-year">____</div>\n'
+    data_string += "</div>\n"
+    data_string += "</li>"
+
+    return data_string
+
+
+def serialize_movie(movie, info):
+    """wraps data retrieved from a single object in html code"""
+    data_string = ""
+    # add html and data to output string
+    data_string += '<li>\n'
+    data_string += '<div class="movie">\n'
+    data_string += '<img class="movie-poster"\n'
+    data_string += 'src="' + info['poster'] + '"/>\n'
+    data_string += '<div class="movie-title">' + movie + '</div>'
+    data_string += '<div class="movie-year">' + str(info['year']) + '</div>'
+    data_string += '</div>\n' + '</li>'
+
+    return data_string
+

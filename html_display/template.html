@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Movie Brain</title>
+    <style>
+        /*
+        Palette:
+
+        Background: #121212 (charcoal black)
+        Primary Text: #E0E0E0 (light gray)
+        Secondary Text: #B0B0B0 (medium gray)
+        Borders/Dividers: #444444 (dark gray)
+        Accent: #888888 (soft gray)
+        */
+                
+        body {
+          background: #121212;
+          color: #b0b0b0;
+          font-family: Monaco;
+          font-size: 16px;          /* base font size for readability */
+          line-height: 1.5;         /* improve spacing */
+        }
+
+        .list-movies-title {
+          padding: 10px 0;
+          background: #444444;
+          color: #e0e0e0;
+          text-align: center;
+          font-size: 16pt;
+        }
+
+        /* flexbox container */
+        .movie-grid {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+          margin-top: 20px;
+          display: flex;
+          flex-wrap: wrap; /* allow wrapping */
+          justify-content: center;
+        }
+
+        .movie-grid li {
+          padding: 10px 15px;
+          text-align: left;
+          box-sizing: border-box; /* include padding in width calculation */
+        }
+
+        /* flexbox item */
+        .movie {
+          flex: 1 0 21%;            /* about 4 per row on desktop */
+          max-width: 360px;         /* optional: prevent items from stretching too wide */
+          margin: 0 auto;           /* center each movie block */
+        }
+
+        .movie-title,
+        .movie-year {
+          font-size: 1em;
+          text-align: center;
+        }
+
+        .movie-title {
+          margin-top: 10px;
+          font-weight: 600;         /* make titles stand out */
+        }
+
+        .movie-year {
+          color: #b0b0b0;
+        }
+
+        .movie-poster {
+          border: 2px solid #888888;
+          width: 100%;              /* scale poster to fit movie block */
+          height: auto;             /* keep aspect ratio */
+        }
+
+        .ascii-art {
+            font-family: monospace;
+            font-size:large;
+            white-space: pre;
+        }
+
+        @media (max-width: 800px) {
+          .ascii-art {
+              font-size:medium;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .ascii-art {
+              font-size:small;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="list-movies-title">
+<div class="ascii-art">
+___  ___               _       ______               _        
+|  \/  |              (_)      | ___ \             (_)       
+| .  . |  ___  __   __ _   ___ | |_/ / _ __   __ _  _  _ __  
+| |\/| | / _ \ \ \ / /| | / _ \| ___ \| '__| / _` || || '_ \ 
+| |  | || (_) | \ V / | ||  __/| |_/ /| |   | (_| || || | | |
+\_|  |_/ \___/   \_/  |_| \___|\____/ |_|    \__,_||_||_| |_|
+                                                             
+                                                             #
+</div>
+    </div>
+    <div>
+        <ol class="movie-grid">
+           __REPLACE_MOVIES_INFO__ 
+        </ol>
+    </div>
+</body>
+</html>
