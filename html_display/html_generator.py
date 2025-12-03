@@ -44,9 +44,8 @@ def read_template(file_path):
         return handle.read()
 
 
-def format_data():
-    """Aggregates and returns a string from the data"""
-    movie_dict = storage.get_movies()
+def format_data(movie_dict):
+    """Aggregates and returns a string from the input data"""
 
     data_string = ""
 
@@ -59,17 +58,17 @@ def format_data():
     return data_string
 
 
-def generate_html_file():
-    write_html(HTML_OUTPUT_FILENAME, create_html_string())
+def generate_html_file(movie_dict):
+    write_html(HTML_OUTPUT_FILENAME, create_html_string(movie_dict))
 
 
-def create_html_string():
+def create_html_string(movie_dict):
     """
     Reads the template file and replaces the placeholder
     text with the generated html code
     """
     return read_template(HTML_TEMPLATE_FILE).replace(
-        "__REPLACE_MOVIES_INFO__", format_data()
+        "__REPLACE_MOVIES_INFO__", format_data(movie_dict)
     )
 
 
@@ -81,7 +80,7 @@ def write_html(file_path, html_string):
 
 def serialize_no_movie():
     data_string = ""
-    data_string += '<li">\n'
+    data_string += '<li style="max-width=360px">\n'
     data_string += '<div class="movie">\n'
     data_string += '<img class="movie-poster" src="no_results.jpg"/>\n'
     data_string += '<div class="movie-title">Sorry, no movies yet.</div>\n'
@@ -101,7 +100,8 @@ def serialize_movie(movie, info):
     data_string += '<img class="movie-poster"\n'
     data_string += 'src="' + info["poster"] + '"/>\n'
     data_string += '<div class="movie-title">' + movie + "</div>"
-    data_string += '<div class="movie-year">' + str(info["year"]) + "</div>"
+    data_string += '<div class="movie-info">' + str(info["year"])\
+                    + " / " + str(info["rating"]) + "</div>"
     data_string += "</div>\n" + "</li>"
 
     return data_string
