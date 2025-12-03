@@ -302,8 +302,10 @@ def sort_movies():
     Shows a menu with the sort options and calls the functions
     to display the results.
     """
-
-    _, info_type, bool_direction = print_sub_menu("sort")
+    try:
+        _, info_type, bool_direction = print_sub_menu("sort")
+    except TypeError:
+        return
 
     print(f"\n  Here is the movie list sorted by {info_type}:\n")
 
@@ -316,9 +318,13 @@ def filter_movies():
     Shows a menu with the filter options and calls the functions
     to display the results.
     """
-    choice, info_type, bool_direction = print_sub_menu("filter")
+    try:
+        choice, info_type, bool_direction = print_sub_menu("filter")
+    except TypeError:
+        return
 
     print("\n  Please enter the start and end value to filter by.")
+
 
     if choice == "1" or choice == "2":
         start = get_rating("\n  Please enter the start rating:\n\n  ")
@@ -332,6 +338,7 @@ def filter_movies():
     movies = storage.get_movies()
     filtered_movies = get_filtered_movies(movies, info_type, start, end)
     sorted_movies(filtered_movies, info_type, bool_direction)
+
 
 
 def get_filtered_movies(movies, info_type, start, end):
