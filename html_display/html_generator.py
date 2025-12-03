@@ -1,22 +1,41 @@
-import os
+import threading
+import logging
+from livereload import Server
+
 from db_handler import movie_storage_sql as storage
 
+
 HTML_TEMPLATE_FILE = "html_display/template.html"
-HTML_OUTPUT_FILENAME = "html_display/moviebrain.html"
+HTML_OUTPUT_FILENAME = "html_display/index.html"
+CSS_FILENAME = "html_display/style.css"
+HTML_LOCAL_URL = "http://localhost:8080/html_display/index.html"
 
-cwd = os.getcwd()
-html_file_path = os.path.join(cwd, HTML_OUTPUT_FILENAME)
 
-#
+def start_livereload():
+    """configures and starts the http livereload"""
+    # disable logging, so it does not clutter the cli
+    logging.disable(logging.CRITICAL)
+
+    local_server = Server()
+    local_server.watch(HTML_OUTPUT_FILENAME)
+    local_server.watch(CSS_FILENAME)
+    # local address http://localhost:8080
+    local_server.serve(root=".", port=8080)
+
+
+# Run livereload in a separate thread in parallel
+thread = threading.Thread(target=start_livereload, daemon=True)
+thread.start()
+
+
 def show_link():
     print(
         "\033]8;;"
-        + "file:///"
-        + html_file_path
+        + HTML_LOCAL_URL
         + "\033\\"
         + "  Ctrl+Click here for the browser view."
         + "\033]8;;\033\\\n"
-        )
+    )
 
 
 def read_template(file_path):
@@ -77,13 +96,12 @@ def serialize_movie(movie, info):
     """wraps data retrieved from a single object in html code"""
     data_string = ""
     # add html and data to output string
-    data_string += '<li>\n'
+    data_string += "<li>\n"
     data_string += '<div class="movie">\n'
     data_string += '<img class="movie-poster"\n'
-    data_string += 'src="' + info['poster'] + '"/>\n'
-    data_string += '<div class="movie-title">' + movie + '</div>'
-    data_string += '<div class="movie-year">' + str(info['year']) + '</div>'
-    data_string += '</div>\n' + '</li>'
+    data_string += 'src="' + info["poster"] + '"/>\n'
+    data_string += '<div class="movie-title">' + movie + "</div>"
+    data_string += '<div class="movie-year">' + str(info["year"]) + "</div>"
+    data_string += "</div>\n" + "</li>"
 
     return data_string
-
