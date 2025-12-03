@@ -2,8 +2,6 @@ import threading
 import logging
 from livereload import Server
 
-from db_handler import movie_storage_sql as storage
-
 
 HTML_TEMPLATE_FILE = "html_display/template.html"
 HTML_OUTPUT_FILENAME = "html_display/index.html"
@@ -100,8 +98,13 @@ def serialize_movie(movie, info):
     data_string += '<img class="movie-poster"\n'
     data_string += 'src="' + info["poster"] + '"/>\n'
     data_string += '<div class="movie-title">' + movie + "</div>"
-    data_string += '<div class="movie-info">' + str(info["year"])\
-                    + " / " + str(info["rating"]) + "</div>"
+    data_string += (
+        '<div class="movie-info">'
+        + str(info["year"])
+        + " / "
+        + str(info["rating"])
+        + "</div>"
+    )
     data_string += "</div>\n" + "</li>"
 
     return data_string
