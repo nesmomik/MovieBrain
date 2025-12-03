@@ -37,6 +37,8 @@ def list_movies():
     else:
         print_message("\n  The database is empty!")
 
+    return movies
+
 
 def get_rating(message):
     """prints the message and returns a rating"""
@@ -84,13 +86,11 @@ def add_movie():
 
     movies = storage.get_movies()
 
-    payload = {'apikey': OMDB_API_KEY, 't': name}
+    payload = {"apikey": OMDB_API_KEY, "t": name}
     try:
         response = requests.get(
-            'https://www.omdbapi.com/',
-            params=payload,
-            timeout=5
-            )
+            "https://www.omdbapi.com/", params=payload, timeout=5
+        )
     except requests.exceptions.ConnectionError:
         print_message("Sorry, can't connect to the search API.")
         return
@@ -101,15 +101,12 @@ def add_movie():
     # response is a json object so data is a dictionary
     data = response.json()
 
-    if data['Response'] == "True":
+    if data["Response"] == "True":
         # check if movie name already exists in the database
-        if movies.get(data['Title']) is None:
+        if movies.get(data["Title"]) is None:
             # save movie
             storage.add_movie(
-                data['Title'],
-                data['Year'],
-                data['imdbRating'],
-                data['Poster']
+                data["Title"], data["Year"], data["imdbRating"], data["Poster"]
             )
 
             print_message(
@@ -120,6 +117,8 @@ def add_movie():
             print_message("Sorry, no movie found!")
     else:
         print_message(f"Error! Movie {name} is already in the database.")
+
+    return storage.get_movies()
 
 
 def delete_movie():
@@ -147,6 +146,8 @@ def delete_movie():
                 f"Sorry, the movie with the name {name} "
                 + "is not in the database."
             )
+
+    return storage.get_movies()
 
 
 def update_movie():
@@ -206,6 +207,8 @@ def show_stats():
             + f"{round(median(rating_list), 1)}"
         )
 
+        result_movie_dict = {}
+
         # get maximum rating and print movie(s) with max rating
         max_rating = max(rating_list)
         best_movies = []
@@ -220,6 +223,7 @@ def show_stats():
                 f"\n  {movie} ({movies[movie]['year']}): "
                 + f"{movies[movie]['rating']}"
             )
+            result_movie_dict[movie] = movies[movie]
 
         # get minimum rating and print movie(s) with min rating
         min_rating = min(rating_list)
@@ -233,12 +237,18 @@ def show_stats():
                 f"\n  {movie} ({movies[movie]['year']}): "
                 + f"{movies[movie]['rating']}"
             )
+            result_movie_dict[movie] = movies[movie]
+
+        return result_movie_dict
     else:
         print_message("\n  The database is empty!")
 
 
 def random_movie():
-    """show a random movie"""
+    """
+    Shows a random movie
+    Returns the random movie as dictionary
+    """
     movies = storage.get_movies()
 
     # check for movies in database
@@ -254,9 +264,17 @@ def random_movie():
     else:
         print_message("\n  The database is empty!")
 
+    result_movie_dict = {}
+    result_movie_dict[names[index]] = movies[names[index]]
+    return result_movie_dict
+
 
 def search_movie():
-    """case insensitive search by partial name"""
+    """
+    Case insensitive search by partial name
+    Returns the search results as dictionary
+    """
+
     search_term = input("\n  Enter the search term:\n\n  ")
 
     if not search_term:
@@ -264,6 +282,8 @@ def search_movie():
         list_movies()
     else:
         movies = storage.get_movies()
+        # used to return a dict of the search results
+        result_movie_dict = {}
         # adds value movie to the list while iterating
         # through the dict keys the condition is met
         search_results = [
@@ -277,14 +297,18 @@ def search_movie():
                     f"\n  {result} ({movies[result]['year']})"
                     + f": {movies[result]['rating']}"
                 )
+                result_movie_dict[result] = movies[result]
         else:
             print("\n  Sorry, no matching movie found.")
 
+    return result_movie_dict
 
-def sorted_movies(movies, info_type, bool_direction):
+
+def print_sorted_movies(movies, info_type, bool_direction):
     """
     Takes a list of movies, the info_type to sort by and a bool value to
     specify to sort direction (False for ascending, True for descending)
+    Returns the sorted movie as dictionary
     """
     sorted_list = sorted(
         movies,
@@ -292,15 +316,20 @@ def sorted_movies(movies, info_type, bool_direction):
         reverse=bool_direction,
     )
 
+    result_movie_dict = {}
+
     for movie in sorted_list:
         info = movies[movie]
         print(f"  {movie} ({info['year']}): {info['rating']}")
+        result_movie_dict[movie] = movies[movie]
+
+    return result_movie_dict
 
 
 def sort_movies():
     """
     Shows a menu with the sort options and calls the functions
-    to display the results.
+    to display and return the results.
     """
     try:
         _, info_type, bool_direction = print_sub_menu("sort")
@@ -310,13 +339,14 @@ def sort_movies():
     print(f"\n  Here is the movie list sorted by {info_type}:\n")
 
     movies = storage.get_movies()
-    sorted_movies(movies, info_type, bool_direction)
+
+    return print_sorted_movies(movies, info_type, bool_direction)
 
 
 def filter_movies():
     """
     Shows a menu with the filter options and calls the functions
-    to display the results.
+    to display and return the results.
     """
     try:
         choice, info_type, bool_direction = print_sub_menu("filter")
@@ -324,7 +354,6 @@ def filter_movies():
         return
 
     print("\n  Please enter the start and end value to filter by.")
-
 
     if choice == "1" or choice == "2":
         start = get_rating("\n  Please enter the start rating:\n\n  ")
@@ -337,8 +366,8 @@ def filter_movies():
 
     movies = storage.get_movies()
     filtered_movies = get_filtered_movies(movies, info_type, start, end)
-    sorted_movies(filtered_movies, info_type, bool_direction)
 
+    return print_sorted_movies(filtered_movies, info_type, bool_direction)
 
 
 def get_filtered_movies(movies, info_type, start, end):
@@ -370,6 +399,7 @@ menu = {
     "9": filter_movies,
 }
 
+
 def main():
     """displays an intro screen and enters the main program loop"""
     print_intro()
@@ -385,8 +415,6 @@ def main():
 
         html_generator.show_link()
 
-        html_generator.generate_html_file()
-
         choice = input("  Enter choice! ")
 
         clear_screen()
@@ -395,7 +423,8 @@ def main():
         print_title()
 
         if choice in map(str, range(1, 10)):
-            menu[choice]()
+            movie_output = menu[choice]()
+            html_generator.generate_html_file(movie_output)
         elif choice == "0":
             clear_screen()
             print_exit()
