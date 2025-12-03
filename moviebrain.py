@@ -179,6 +179,8 @@ def update_movie():
                 + "is not in the database."
             )
 
+    return storage.get_movies()
+
 
 def show_stats():
     """
