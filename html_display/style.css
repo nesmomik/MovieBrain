@@ -8,34 +8,34 @@ Secondary Text: #B0B0B0 (medium gray)
 Borders/Dividers: #444444 (dark gray)
 Accent: #888888 (soft gray)
 */
-      
+
 body {
 background: #121212;
 color: #b0b0b0;
 font-family: Monaco;
-font-size: 16px;          /* base font size for readability */
-line-height: 1.5;         /* improve spacing */
+font-size: 16px;
+line-height: 1.5;
 }
 
 .list-movies-title {
 display: flex;
-align-items: center;       /* vertically align ascii-art and buttons */
-justify-content: center;   /* center ascii-art by default */
-position: relative;        /* allow absolute positioning of controls */padding: 10px 0;
+align-items: center;
+justify-content: center;
+position: relative;
+padding: 10px 0;
 background: #444444;
 color: #e0e0e0;
 text-align: center;
 font-size: 16pt;
 }
 
-/* flexbox container */
 .movie-grid {
 list-style-type: none;
 padding: 0;
 margin: 0;
 margin-top: 20px;
 display: flex;
-flex-wrap: wrap; /* allow wrapping */
+flex-wrap: wrap;
 justify-content: center;
 }
 
@@ -43,13 +43,12 @@ justify-content: center;
 padding: 10px 15px;
 text-align: left;
 display: flex;
-flex: 0 0 21%;            /* about 4 per row on desktop */
-box-sizing: border-box; /* include padding in width calculation */
+flex: 0 0 21%;
+box-sizing: border-box;
 }
 
-/* flexbox item */
 .movie {
-margin: 0 auto;           /* center each movie block */
+margin: 0 auto;
 }
 
 .movie-title,
@@ -60,7 +59,7 @@ text-align: center;
 
 .movie-title {
 margin-top: 10px;
-font-weight: 600;         /* make titles stand out */
+font-weight: 600;
 }
 
 .movie-info {
@@ -69,8 +68,8 @@ color: #b0b0b0;
 
 .movie-poster {
 border: 2px solid #888888;
-width: 100%;              /* scale poster to fit movie block */
-height: auto;             /* keep aspect ratio */
+width: 100%;
+height: auto;
 }
 
 .ascii-art {
@@ -81,11 +80,11 @@ height: auto;             /* keep aspect ratio */
 
 .controls {
 display: flex;
-flex-direction: column;   /* stack children vertically */
-gap: 5px;                 /* optional spacing between buttons */
+flex-direction: column;
+gap: 5px;
 margin-top: 10px;
 position: absolute;
-right: 20px;            
+right: 20px;
 }
 
 .controls button {
