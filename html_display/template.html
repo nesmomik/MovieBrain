@@ -18,11 +18,45 @@ ___  ___               _       ______               _
                                                              
                                                              #
 </div>
+  <div class="controls">
+    <button id="increase">+</button>
+    <button id="decrease">−</button>
+  </div>
     </div>
     <div>
         <ol class="movie-grid">
            __REPLACE_MOVIES_INFO__ 
         </ol>
     </div>
+<script>
+let currentBasis = 21; // starting flex-basis percentage
+
+// Load saved value
+const savedBasis = localStorage.getItem('flexBasis');
+if (savedBasis) {
+  currentBasis = parseInt(savedBasis, 10);
+}
+
+function updateMovieSize() {
+  document.querySelectorAll('.movie-grid li').forEach(el => {
+    el.style.flex = `0 0 ${currentBasis}%`;;
+  });
+}
+
+updateMovieSize();
+
+document.getElementById('increase').addEventListener('click', () => {
+  currentBasis = Math.min(currentBasis + 5, 100);
+  updateMovieSize();
+  localStorage.setItem('flexBasis', currentBasis);
+});
+
+document.getElementById('decrease').addEventListener('click', () => {
+  currentBasis = Math.max(currentBasis - 5, 5);
+  updateMovieSize();
+  localStorage.setItem('flexBasis', currentBasis);
+});
+
+</script>
 </body>
 </html>
