@@ -114,9 +114,9 @@ def add_movie():
                 + f"with the rating {data['imdbRating']} to the database."
             )
         else:
-            print_message("Sorry, no movie found!")
+            print_message(f"Error! Movie {name} is already in the database.")
     else:
-        print_message(f"Error! Movie {name} is already in the database.")
+        print_message("Sorry, no movie found!")
 
     return storage.get_movies()
 
