@@ -14,11 +14,35 @@ with engine.connect() as connection:
     connection.execute(
         text("""
         CREATE TABLE IF NOT EXISTS movies (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            movie_id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT UNIQUE NOT NULL,
             year INTEGER NOT NULL,
             rating REAL NOT NULL,
             poster TEXT NOT NULL
+        )
+    """)
+    )
+    connection.commit()
+
+# Create the user table if it does not exist
+with engine.connect() as connection:
+    connection.execute(
+        text("""
+        CREATE TABLE IF NOT EXISTS users (
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE NOT NULL
+        )
+    """)
+    )
+    connection.commit()
+
+# Create the movies_user table if it does not exist
+with engine.connect() as connection:
+    connection.execute(
+        text("""
+        CREATE TABLE IF NOT EXISTS movies_user (
+            movie_id INTEGER NOT NULL REFERENCES movies(movie_id),
+            user_id INTEGER NOT NULL REFERENCES users(user_id)
         )
     """)
     )
