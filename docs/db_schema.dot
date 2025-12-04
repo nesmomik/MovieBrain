@@ -1,13 +1,10 @@
 digraph ERD {
-    graph [rankdir=LR];  // left-to-right layout
     node [shape=record, fontname=Helvetica];
 
-    movies [
-        label="{ movies | 
-            { id : INTEGER (PK) | 
-              title : TEXT (UNIQUE, NOT NULL) | 
-              year : INTEGER (NOT NULL) | 
-              rating : REAL (NOT NULL) }
-        }"
-    ];
-}
+    movies [label="{movies| movie_id (PK) | title | year | rating | poster}"];
+    users [label="{users| user_id (PK) | name}"];
+    movies_user [label="{movies_user| movie_id (FK) | user_id (FK)}"];
+
+    movies -> movies_user [label="movie_id"];
+    users -> movies_user [label="user_id"];
+ }
