@@ -80,6 +80,16 @@ def print_exit():
     print("           See you again in the MovieBrain!\n\n")
 
 
+def print_user_menu():
+    """print the user menu"""
+    print(r"""
+  Please choose:
+
+  1. Log In User
+  2. Add User
+  3. Delete User
+""")
+
 def print_menu():
     """pring the main menu"""
     print_title()

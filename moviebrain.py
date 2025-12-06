@@ -17,16 +17,20 @@ from ui_helper import (
     wait_for_enter,
     print_message,
     print_sub_menu,
+    print_user_menu,
 )
 
 # read api key from .env file
 OMDB_API_KEY = dotenv_values(".env")["OMDB_API_KEY"]
+# global variable to save current user
+current_user_id = 0
 
 
 def list_movies():
     """list all movies"""
     # load movies from the database
-    movies = storage.get_movies()
+    global current_user_id
+    movies = storage.get_movies(current_user_id)
 
     if movies:
         print(f"\n  There are {len(movies)} movies in the database.\n")
@@ -69,6 +73,8 @@ def get_year(message):
 
 def add_movie():
     """adds a movie"""
+    global current_user_id
+
     is_not_valid = True
     while is_not_valid:
         name = input(
@@ -84,7 +90,7 @@ def add_movie():
             is_not_valid = False
             break
 
-    movies = storage.get_movies()
+    movies = storage.get_movies(current_user_id)
 
     payload = {"apikey": OMDB_API_KEY, "t": name}
     try:
@@ -106,7 +112,11 @@ def add_movie():
         if movies.get(data["Title"]) is None:
             # save movie
             storage.add_movie(
-                data["Title"], data["Year"], data["imdbRating"], data["Poster"]
+                current_user_id,
+                data["Title"],
+                data["Year"],
+                data["imdbRating"],
+                data["Poster"]
             )
 
             print_message(
@@ -118,11 +128,12 @@ def add_movie():
     else:
         print_message("Sorry, no movie found!")
 
-    return storage.get_movies()
+    return storage.get_movies(current_user_id)
 
 
 def delete_movie():
     """delete a movie"""
+    global current_user_id
     list_movies()
 
     name = input(
@@ -132,11 +143,11 @@ def delete_movie():
     if not name:
         print_message("Sorry, you did not enter a movie name!")
     else:
-        movies = storage.get_movies()
+        movies = storage.get_movies(current_user_id)
 
         if movies.get(name) is not None:
             info = movies[name]
-            storage.delete_movie(name)
+            storage.delete_movie(current_user_id, name)
             print_message(
                 f"Removed {name} ({info['year']}) "
                 + f"with the rating {info['rating']} from the database."
@@ -147,11 +158,12 @@ def delete_movie():
                 + "is not in the database."
             )
 
-    return storage.get_movies()
+    return storage.get_movies(current_user_id)
 
 
 def update_movie():
     """change the rating of a movie"""
+    global current_user_id
     list_movies()
 
     name = input(
@@ -161,7 +173,7 @@ def update_movie():
     if not name:
         print_message("Sorry, you did not enter a movie name!")
     else:
-        movies = storage.get_movies()
+        movies = storage.get_movies(current_user_id)
 
         if movies.get(name) is not None:
             new_rating = get_rating(
@@ -179,7 +191,7 @@ def update_movie():
                 + "is not in the database."
             )
 
-    return storage.get_movies()
+    return storage.get_movies(current_user_id)
 
 
 def show_stats():
@@ -187,7 +199,8 @@ def show_stats():
     shows the average and median rating values of all movies and also
     information about the worst and best movies
     """
-    movies = storage.get_movies()
+    global current_user_id
+    movies = storage.get_movies(current_user_id)
 
     if movies:
         print("\n  Here are some fresh stats from the database:")
@@ -251,7 +264,8 @@ def random_movie():
     Shows a random movie
     Returns the random movie as dictionary
     """
-    movies = storage.get_movies()
+    global current_user_id
+    movies = storage.get_movies(current_user_id)
 
     # check for movies in database
     if movies:
@@ -276,14 +290,14 @@ def search_movie():
     Case insensitive search by partial name
     Returns the search results as dictionary
     """
-
+    global current_user_id
     search_term = input("\n  Enter the search term:\n\n  ")
 
     if not search_term:
         print("\n  No search term given. Listing all movies!")
         list_movies()
     else:
-        movies = storage.get_movies()
+        movies = storage.get_movies(current_user_id)
         # used to return a dict of the search results
         result_movie_dict = {}
         # adds value movie to the list while iterating
@@ -333,6 +347,7 @@ def sort_movies():
     Shows a menu with the sort options and calls the functions
     to display and return the results.
     """
+    global current_user_id
     try:
         _, info_type, bool_direction = print_sub_menu("sort")
     except TypeError:
@@ -340,7 +355,7 @@ def sort_movies():
 
     print(f"\n  Here is the movie list sorted by {info_type}:\n")
 
-    movies = storage.get_movies()
+    movies = storage.get_movies(current_user_id)
 
     return print_sorted_movies(movies, info_type, bool_direction)
 
@@ -350,6 +365,7 @@ def filter_movies():
     Shows a menu with the filter options and calls the functions
     to display and return the results.
     """
+    global current_user_id
     try:
         choice, info_type, bool_direction = print_sub_menu("filter")
     except TypeError:
@@ -366,7 +382,7 @@ def filter_movies():
 
     print(f"\n  Here is the movie list filtered by {info_type}:\n")
 
-    movies = storage.get_movies()
+    movies = storage.get_movies(current_user_id)
     filtered_movies = get_filtered_movies(movies, info_type, start, end)
 
     return print_sorted_movies(filtered_movies, info_type, bool_direction)
@@ -377,7 +393,8 @@ def get_filtered_movies(movies, info_type, start, end):
     Filters a dict of dict of movies according to info_type
     and start and end values
     """
-    movies = storage.get_movies()
+    global current_user_id
+    movies = storage.get_movies(current_user_id)
 
     results = {}
 
@@ -387,6 +404,99 @@ def get_filtered_movies(movies, info_type, start, end):
             results[movie] = info
 
     return results
+
+
+def print_users(users):
+    if users:
+        if len(users) == 1:
+            print(f"\n  There is {len(users)} user in the database.\n")
+        else:
+            print(f"\n  There are {len(users)} users in the database.\n")
+
+        for index, user in enumerate(users):
+            print(f"  {index + 1}. {user[0]}")
+    else:
+        print("\n  The user database is empty!")
+
+
+def get_user_input(users, description):
+    """
+    Prints a list of users and the available options and returns the
+    user input as string.
+    """
+    is_not_valid = True
+    while is_not_valid:
+        clear_screen()
+        print_title()
+        print_users(users)
+        print_user_menu()
+
+        try:
+            input_str = input(f"  Please enter {description}:\n\n  ")
+        except KeyboardInterrupt:
+            print("\n  Exiting.")
+            exit()
+
+        if not input_str:
+            print_message(f"Error! No {description} given.")
+            wait_for_enter()
+            clear_screen()
+            print_title()
+            print_user_menu()
+        else:
+            is_not_valid = False
+            break
+
+    return input_str
+
+
+def select_user():
+    """selects a user"""
+    global current_user_id
+    while True:
+        users = storage.get_users()
+        try:
+            option = int(get_user_input(users, "option"))
+        except ValueError:
+            print_message("Please enter a valid number.")
+            wait_for_enter()
+            continue
+
+        # log in user
+        if option == 1:
+            name = get_user_input(users, "name")
+            user_id = storage.get_user_id(name)
+            if user_id:
+                current_user_id = user_id
+                print_message(
+                    f"You are logged in as user {name}"
+                    + f" with id {current_user_id}."
+                )
+                break
+            else:
+                print_message("Sorry, name not found.")
+                wait_for_enter()
+        # add user
+        elif option == 2:
+            name = get_user_input(users, "new user name")
+            if not storage.get_user_id(name):
+                user_id = storage.add_user(name)
+                print_message(
+                    f"You added a new user named {name}"
+                    + f" with id {user_id}."
+                )
+            else:
+                print_message("Sorry, user name already exists.")
+
+        # delete user
+        elif option == 3:
+            name = get_user_input(users, "name")
+            if storage.get_user_id(name):
+                storage.delete_user(name)
+                print_message(f"You deleted user {name} and all his content.")
+            else:
+                print_message("Sorry, name not found.")
+                wait_for_enter()
 
 
 menu = {
@@ -405,9 +515,11 @@ menu = {
 def main():
     """displays an intro screen and enters the main program loop"""
     print_intro()
-
     wait_for_enter()
+    clear_screen()
 
+    select_user()
+    wait_for_enter()
     clear_screen()
 
     # the main loop

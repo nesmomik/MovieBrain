@@ -7,6 +7,7 @@ from .helper import (
     wait_for_enter,
     print_message,
     print_sub_menu,
+    print_user_menu
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "wait_for_enter",
     "print_message",
     "print_sub_menu",
+    "print_user_menu"
 ]
