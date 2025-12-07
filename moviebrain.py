@@ -3,8 +3,7 @@ from statistics import median, mean
 from dotenv import dotenv_values
 import requests
 
-# switch between json and sql storage
-# from db_handler import movie_storage_json as storage
+
 from db_handler import movie_storage_sql as storage
 from html_display import html_generator
 
@@ -116,7 +115,7 @@ def add_movie():
                 data["Title"],
                 data["Year"],
                 data["imdbRating"],
-                data["Poster"]
+                data["Poster"],
             )
 
             print_message(
