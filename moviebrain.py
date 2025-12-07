@@ -196,7 +196,7 @@ def update_movie():
         if movies.get(name) is not None:
             current_note = storage.get_movie_note(current_user_id, name)
             if current_note:
-                print(f"\n  The current note says:\n {current_note}") 
+                print(f"\n  The current note says:\n {current_note}")
             else:
                 print("\n  This movie has no note yet.")
 
