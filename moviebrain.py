@@ -43,6 +43,25 @@ def list_movies():
     return movies
 
 
+def list_numbered_movies():
+    """list all movies with numbers in front of them"""
+    # load movies from the database
+    global current_user_id
+    movies = storage.get_movies(current_user_id)
+
+    if movies:
+        print(f"\n  There are {len(movies)} movies in the database.\n")
+
+        index = 1
+        for movie, info in movies.items():
+            print(f"  {index:<3} {movie} ({info['year']}): {info['rating']}")
+            index += 1
+    else:
+        print_message("\n  The database is empty!")
+
+    return movies
+
+
 def get_rating(message):
     """prints the message and returns a rating"""
     while True:
@@ -161,7 +180,7 @@ def delete_movie():
 
 
 def update_movie():
-    """change the rating of a movie"""
+    """change the note of a movie"""
     global current_user_id
     list_movies()
 
@@ -175,14 +194,20 @@ def update_movie():
         movies = storage.get_movies(current_user_id)
 
         if movies.get(name) is not None:
-            new_rating = get_rating(
-                "\n  Please enter a new rating" + " for the movie:\n\n  "
+            current_note = storage.get_movie_note(current_user_id, name)
+            if current_note:
+                print(f"\n  The current note says:\n {current_note}") 
+            else:
+                print("\n  This movie has no note yet.")
+
+            new_note = input(
+                "\n  Please enter a new note for the movie:\n\n  "
             )
             info = movies[name]
-            storage.update_movie(name, new_rating)
+            storage.update_movie_note(current_user_id, name, new_note)
             print_message(
                 f"Updated the movie {name} from {info['year']} "
-                + f"with the new rating {new_rating}."
+                + f"with the new note:\n\n  {new_note}"
             )
         else:
             print_message(
@@ -498,6 +523,24 @@ def select_user():
                 wait_for_enter()
 
 
+def add_notes_to_movies(movies):
+    """
+    For a given movie dictionary
+    Adds a new key 'note' and adds the note fetched from the db as value
+    Returns the modified movie dict
+    """
+    global current_user_id
+
+    for movie, info in movies.items():
+        note = storage.get_movie_note(current_user_id, movie)
+        if note:
+            info["note"] = note
+        else:
+            info["note"] = ""
+
+    return movies
+
+
 menu = {
     "1": list_movies,
     "2": add_movie,
@@ -537,6 +580,7 @@ def main():
 
         if choice in map(str, range(1, 10)):
             movie_output = menu[choice]()
+            movie_output = add_notes_to_movies(movie_output)
             html_generator.generate_html_file(movie_output)
         elif choice == "0":
             clear_screen()

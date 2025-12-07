@@ -61,7 +61,7 @@ def get_movies(user_id):
                 ON m.movie_id = mu.movie_id
                 WHERE mu.user_id = :user_id
                 """),
-            {"user_id": user_id},
+            {"user_id": user_id}
         )
         movies = result.fetchall()
 
@@ -78,61 +78,52 @@ def add_movie(user_id, title, year, rating, poster):
     """
     # check if movie already exits for different user
     with engine.connect() as connection:
-        try:
-            results = connection.execute(
-                text("""
-                     SELECT movie_id FROM movies
-                     WHERE movies.title = :title
-                     """),
-                {"title": title},
-            )
-            # fetchall returns a list of tuples for every row
-            # accessing list item 0 tupel item 0
-            movie_id = results.scalar()
-        except Exception as e:
-            print(f"Error: {e}")
+        results = connection.execute(
+            text("""
+                 SELECT movie_id FROM movies
+                 WHERE movies.title = :title
+                 """),
+            {"title": title},
+        )
+        # fetchall returns a list of tuples for every row
+        # accessing list item 0 tupel item 0
+        movie_id = results.scalar()
 
     # add movie to movies table if it has no entry yet
     if not movie_id:
         with engine.connect() as connection:
-            try:
-                result = connection.execute(
-                    text("""
-                         INSERT INTO movies (
-                         title, year, rating, poster
-                         ) VALUES (
-                         :title, :year, :rating, :poster
-                         )
-                         RETURNING movie_id
-                        """),
-                    {
-                        "title": title,
-                        "year": year,
-                        "rating": rating,
-                        "poster": poster,
-                    },
-                )
-                movie_id = result.scalar()
-                connection.commit()
-            except Exception as e:
-                print(f"Error: {e}")
+            result = connection.execute(
+                text("""
+                     INSERT INTO movies (
+                     title, year, rating, poster
+                     ) VALUES (
+                     :title, :year, :rating, :poster
+                     )
+                     RETURNING movie_id
+                    """),
+                {
+                    "title": title,
+                    "year": year,
+                    "rating": rating,
+                    "poster": poster,
+                }
+            )
+            movie_id = result.scalar()
+            connection.commit()
 
     # add crossreference in both cases
     with engine.connect() as connection:
-        try:
-            connection.execute(
-                text("""
-                     INSERT INTO movies_users (
-                     movie_id, user_id
-                     ) VALUES (
-                     :movie_id, :user_id
-                     )
-                    """),
-                {"movie_id": movie_id, "user_id": user_id},
-            )
-            connection.commit()
-        except Exception as e:
-            print(f"Error: {e}")
+        connection.execute(
+            text("""
+                 INSERT INTO movies_users (
+                 movie_id, user_id
+                 ) VALUES (
+                 :movie_id, :user_id
+                 )
+                """),
+            {"movie_id": movie_id, "user_id": user_id}
+        )
+        connection.commit()
 
 
 def delete_movie(user_id, title):
@@ -141,58 +132,75 @@ def delete_movie(user_id, title):
     from the database, if it is not referenced anymore.
     """
     with engine.connect() as connection:
-        try:
-            connection.execute(
-                text("""
-                     DELETE FROM movies_users AS mu
-                     WHERE mu.user_id = user_id
-                     AND mu.movie_id = (
-                        SELECT movie_id
-                        FROM movies
-                        WHERE movies.title = :title
-                    )
-                     """),
-                {"title": title, "user_id": user_id},
-            )
-            connection.commit()
-        except Exception as e:
-            print(f"Error: {e}")
+        connection.execute(
+            text("""
+                 DELETE FROM movies_users AS mu
+                 WHERE mu.user_id = user_id
+                 AND mu.movie_id = (
+                    SELECT movie_id
+                    FROM movies
+                    WHERE movies.title = :title
+                )
+                 """),
+            {"title": title, "user_id": user_id}
+        )
+        connection.commit()
 
     with engine.connect() as connection:
-        try:
-            connection.execute(
-                text("""
-                     DELETE FROM movies
-                     WHERE title = :title
-                     AND movie_id NOT IN (
-                        SELECT movie_id
-                        FROM movies_users
-                    )
-                     """),
-                {"title": title},
-            )
-            connection.commit()
-        except Exception as e:
-            print(f"Error: {e}")
+        connection.execute(
+            text("""
+                 DELETE FROM movies
+                 WHERE title = :title
+                 AND movie_id NOT IN (
+                    SELECT movie_id
+                    FROM movies_users
+                )
+                 """),
+            {"title": title}
+        )
+        connection.commit()
 
 
-def update_movie(title, rating):
-    """Update a movie's rating in the database."""
+def update_movie_note(user_id, title, note):
+    """Update a movies note in the database."""
     with engine.connect() as connection:
-        try:
-            connection.execute(
-                text("""
-                     UPDATE movies
-                     SET
-                       rating = :rating
-                     WHERE title = :title
-                     """),
-                {"title": title, "rating": rating},
-            )
-            connection.commit()
-            print(f"Movie '{title}' updated successfully.")
-        except Exception as e:
-            print(f"Error: {e}")
+        connection.execute(
+            text("""
+                 UPDATE movies_users
+                 SET
+                   note = :note
+                 WHERE user_id = :user_id
+                 AND movie_id = (
+                    SELECT movie_id
+                    FROM movies
+                    WHERE title = :title
+                )
+                 """),
+            {"user_id": user_id, "title": title, "note": note}
+        )
+        connection.commit()
+
+
+def get_movie_note(user_id, title):
+    """Returns a movie note from the database."""
+    with engine.connect() as connection:
+        result = connection.execute(
+            text("""
+                 SELECT note
+                 FROM movies_users
+                 WHERE user_id = :user_id
+                 AND movie_id = (
+                    SELECT movie_id
+                    FROM movies
+                    WHERE title = :title
+                )
+                 """),
+            {"title": title, "user_id": user_id}
+        )
+        connection.commit()
+
+        return result.fetchall()[0][0]
+
 
 
 def get_users():
@@ -264,7 +272,7 @@ def delete_user(name):
                     WHERE u.name = :name
                 )
             """),
-            {"name": name},
+            {"name": name}
         )
         connection.commit()
 
@@ -277,7 +285,7 @@ def delete_user(name):
                     SELECT user_id FROM users WHERE name = :name
                 )
             """),
-            {"name": name},
+            {"name": name}
         )
         connection.commit()
 

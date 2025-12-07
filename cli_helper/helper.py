@@ -100,7 +100,7 @@ def print_menu():
   1. List movies            6. Random movie
   2. Add movie              7. Search movie
   3. Delete movie           8. Sort movies
-  4. Update movie           9. Filter movies
+  4. Add/Update note        9. Filter movies
   5. Show stats             0. Leave the MovieBrain
 
     """)

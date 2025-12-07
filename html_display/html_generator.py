@@ -79,7 +79,7 @@ def write_html(file_path, html_string):
 def serialize_no_movie():
     data_string = ""
     data_string += '<li style="max-width=360px">\n'
-    data_string += '<div class="movie">\n'
+    data_string += '<div class="movie" title="November rain.">\n'
     data_string += '<img class="movie-poster" src="no_results.jpg"/>\n'
     data_string += '<div class="movie-title">Sorry, no movies yet.</div>\n'
     data_string += '<div class="movie-year">____</div>\n'
@@ -94,7 +94,7 @@ def serialize_movie(movie, info):
     data_string = ""
     # add html and data to output string
     data_string += "<li>\n"
-    data_string += '<div class="movie">\n'
+    data_string += '<div class="movie" title="' + info["note"] + '">\n'
     data_string += '<img class="movie-poster"\n'
     data_string += 'src="' + info["poster"] + '"/>\n'
     data_string += '<div class="movie-title">' + movie + "</div>"
