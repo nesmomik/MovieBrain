@@ -8,7 +8,7 @@ import requests
 from db_handler import movie_storage_sql as storage
 from html_display import html_generator
 
-from ui_helper import (
+from cli_helper import (
     print_intro,
     print_exit,
     print_menu,
