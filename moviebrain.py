@@ -443,7 +443,7 @@ def print_users(users):
         print("\n  The user database is empty!")
 
 
-def get_user_input(users, description):
+def get_login_input(users, description):
     """
     Prints a list of users and the available options and returns the
     user input as string.
@@ -480,7 +480,7 @@ def select_user():
     while True:
         users = storage.get_users()
         try:
-            option = int(get_user_input(users, "option"))
+            option = int(get_login_input(users, "option"))
         except ValueError:
             print_message("Please enter a valid number.")
             wait_for_enter()
@@ -488,7 +488,7 @@ def select_user():
 
         # log in user
         if option == 1:
-            name = get_user_input(users, "name")
+            name = get_login_input(users, "name")
             user_id = storage.get_user_id(name)
             if user_id:
                 current_user_id = user_id
@@ -502,7 +502,7 @@ def select_user():
                 wait_for_enter()
         # add user
         elif option == 2:
-            name = get_user_input(users, "new user name")
+            name = get_login_input(users, "new user name")
             if not storage.get_user_id(name):
                 user_id = storage.add_user(name)
                 print_message(
@@ -514,7 +514,7 @@ def select_user():
 
         # delete user
         elif option == 3:
-            name = get_user_input(users, "name")
+            name = get_login_input(users, "name")
             if storage.get_user_id(name):
                 storage.delete_user(name)
                 print_message(f"You deleted user {name} and all his content.")

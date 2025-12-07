@@ -85,9 +85,9 @@ def print_user_menu():
     print(r"""
   Please choose:
 
-  1. Log In User
-  2. Add User
-  3. Delete User
+  1. Log in user
+  2. Add user
+  3. Delete user
 """)
 
 def print_menu():

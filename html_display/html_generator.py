@@ -31,7 +31,7 @@ def show_link():
         "\033]8;;"
         + HTML_LOCAL_URL
         + "\033\\"
-        + "  Ctrl+Click here for the browser view."
+        + "  Browser view updated! (Ctrl+Click here)"
         + "\033]8;;\033\\\n"
     )
 
