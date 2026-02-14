@@ -3,18 +3,18 @@
 A simple movie database project with Open Movie Database API access.
 CLI controlled but with a live browser view.
 
-Install by executing '''git clone https://github.com/nesmomik/MovieBrain.git''' in a terminal.
+Install by executing `git clone https://github.com/nesmomik/MovieBrain.git` in a terminal.
 
-Change into the directory with '''cd MovieBrain'''.
+Change into the directory with `cd MovieBrain`.
 
 Create a virtual environment with `python -m venv .venv`.
 
 Activate the virtual environment with `source .venv/bin/activate`.
 
-Install the the dependencies with '''pip install -r requirements.txt'''.
+Install the the dependencies with `pip install -r requirements.txt`.
 
 Get a free API key from [OMDb API](https://www.omdbapi.com/).
 
-Create an '''.env''' file in the project directory with ''''OMDB_API_KEY=YOUR_API_KEY''.
+Create an `.env` file in the project directory with `OMDB_API_KEY=YOUR_API_KEY`.
 
-Start the program with '''python moviebrain.py'''.
+Start the program with `python moviebrain.py`.
