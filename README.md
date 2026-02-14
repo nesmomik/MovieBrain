@@ -7,7 +7,11 @@ Install by executing '''git clone https://github.com/nesmomik/MovieBrain.git''' 
 
 Change into the directory with '''cd MovieBrain'''.
 
-Install the the dependencies with '''pip install requirements.txt'''.
+Create a virtual environment with `python -m venv .venv`.
+
+Activate the virtual environment with `source .venv/bin/activate`.
+
+Install the the dependencies with '''pip install -r requirements.txt'''.
 
 Get a free API key from [OMDb API](https://www.omdbapi.com/).
 
